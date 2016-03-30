@@ -1,0 +1,5 @@
+#Sat Mar 26 20:13:57 SGT 2016
+Halcyon\ Version=2.0
+LIBPATH=/usr/local/share/nmap/nselib/
+NSEPATH=/usr/local/share/nmap/scripts/
+NPATH=/usr/local/bin/nmap
