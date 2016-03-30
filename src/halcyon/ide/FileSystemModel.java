@@ -50,9 +50,9 @@ public class FileSystemModel implements TreeModel {
     public Object getChild(Object parent, int index) {
         File directory = (File) parent;
         String[] children = directory.list();
- /*       for (int j = 0; j< children.length; j++ ){
+        /* for (int j = 0; j< children.length; j++ ){
             System.out.println(children[j]);
-        }       */
+        } */
         
         return new FileSystemModel.TreeFile(directory, children[index]);
     }

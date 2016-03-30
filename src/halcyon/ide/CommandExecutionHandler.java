@@ -66,20 +66,18 @@ public class CommandExecutionHandler {
                   br = new BufferedReader(new InputStreamReader(inputStream));
                   String line = null;
                   
-                  while((line = br.readLine()) != null){
-                    //  line = line.replaceAll("( )+", "\t");
+                  while((line = br.readLine()) != null){ 
                       outputBuffer.append(line + "\n");
                   }
                   
                   br = new BufferedReader(new InputStreamReader(errorStream));
                   
-                  while((line = br.readLine()) != null){
-                    //  line = line.replaceAll("( )+", "\t");
+                  while((line = br.readLine()) != null){ 
                       outputBuffer.append(line + "\n");
                   }
                   
               }catch(Exception e){
-                  e.printStackTrace();
+                  
               }
           }
       };

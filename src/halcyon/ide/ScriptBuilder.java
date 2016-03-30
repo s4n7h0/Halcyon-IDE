@@ -21,18 +21,16 @@ public class ScriptBuilder {
         String t = "{";
         
        int i = 0;
-       for(Object c: categ){
-           t = t + "\""+c+"\"";
-            if(i<(categ.length-1)) t = t+", ";
-            i++;
-       }
-        
-        /*
-        for(int i=0;i<categ.size();i++){
-            t = t + "\""+categ.get(i)+"\"";
-            if(i<(categ.size()-1)) t = t+", ";
+        if(categ.length<0){
+            for(Object c: categ){
+                t = t + "\""+c+"\"";
+                 if(i<(categ.length-1)) t = t+", ";
+                 i++;
+            } 
+        }else{
+            t = t + "\"default\"";
         }
-        */
+            
         
         t = t+"}";
         scriptCateg = t;
@@ -83,7 +81,6 @@ public class ScriptBuilder {
     
     public String getPortrule(){
         String rule = null;
-        System.out.println(scriptService);
         if(scriptService.equals("default")){
             rule = "portrule = function(host, port)" ;
         }else{

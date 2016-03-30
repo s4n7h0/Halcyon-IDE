@@ -18,9 +18,6 @@ import javax.swing.undo.UndoManager;
 import org.fife.ui.autocomplete.*;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.*;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.*;
-import org.jsoup.select.Elements;
 
 /**
  *
@@ -182,7 +179,9 @@ public class MainPanel extends javax.swing.JFrame {
         jMenuItem_undo = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_find = new javax.swing.JMenuItem();
-        jMenu_Tools = new javax.swing.JMenu();
+        jMenu_Proj = new javax.swing.JMenu();
+        jMenuItem_run = new javax.swing.JMenuItem();
+        jMenuItem_stop = new javax.swing.JMenuItem();
         jMenu_codegen = new javax.swing.JMenu();
         jMenuItem_afpHelper = new javax.swing.JMenuItem();
         jMenuItem_bittorrent = new javax.swing.JMenuItem();
@@ -224,7 +223,6 @@ public class MainPanel extends javax.swing.JFrame {
         jFrame_Configure.setTitle("Configure");
         jFrame_Configure.setAlwaysOnTop(true);
         jFrame_Configure.setMinimumSize(new java.awt.Dimension(500, 230));
-        jFrame_Configure.setPreferredSize(new java.awt.Dimension(500, 230));
         jFrame_Configure.setResizable(false);
         jFrame_Configure.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -491,7 +489,11 @@ public class MainPanel extends javax.swing.JFrame {
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jButton_NewNSEBrowse.setText("...");
+        jTextField_NewNSEName.setEditable(false);
+        jTextField_NewNSEName.setEnabled(false);
+
+        jButton_NewNSEBrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/open.gif"))); // NOI18N
+        jButton_NewNSEBrowse.setToolTipText("Locate folder and choose file name with extention");
         jButton_NewNSEBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton_NewNSEBrowseActionPerformed(evt);
@@ -504,19 +506,21 @@ public class MainPanel extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton_NewNSEBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton_NewNSEBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton_NewNSEBrowse))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton_NewNSEBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel3.add(jPanel4, new java.awt.GridBagConstraints());
@@ -1249,7 +1253,23 @@ public class MainPanel extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu_Edit);
 
-        jMenu_Tools.setText("Tools");
+        jMenu_Proj.setText("Project");
+
+        jMenuItem_run.setText("Run");
+        jMenuItem_run.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_runActionPerformed(evt);
+            }
+        });
+        jMenu_Proj.add(jMenuItem_run);
+
+        jMenuItem_stop.setText("Stop");
+        jMenuItem_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_stopActionPerformed(evt);
+            }
+        });
+        jMenu_Proj.add(jMenuItem_stop);
 
         jMenu_codegen.setText("Code Generator");
 
@@ -1481,8 +1501,8 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jMenu_codegen.add(jMenuItem_xamp);
 
-        jMenu_Tools.add(jMenu_codegen);
-        jMenu_Tools.add(jSeparator7);
+        jMenu_Proj.add(jMenu_codegen);
+        jMenu_Proj.add(jSeparator7);
 
         jMenuItem_configure.setText("Configure");
         jMenuItem_configure.addActionListener(new java.awt.event.ActionListener() {
@@ -1490,9 +1510,9 @@ public class MainPanel extends javax.swing.JFrame {
                 jMenuItem_configureActionPerformed(evt);
             }
         });
-        jMenu_Tools.add(jMenuItem_configure);
+        jMenu_Proj.add(jMenuItem_configure);
 
-        jMenuBar1.add(jMenu_Tools);
+        jMenuBar1.add(jMenu_Proj);
 
         jMenu_Help.setText("Help");
 
@@ -1597,15 +1617,15 @@ public class MainPanel extends javax.swing.JFrame {
                     jTextField_LIBPATH.setText(lib);
                     jButton_applyConfig.setEnabled(true);
                 }else{
-                   showMsg("Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+                   showMsg(jFrame_Configure,"Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
                 } 
             }else{
-                showMsg("Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+                showMsg(jFrame_Configure,"Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
             }
          
         }catch(NullPointerException e){
             String error = "<html>Unable to find the nmap location.<br>Please configure it manually.</html>";
-            int done = showMsg(error, "Error !!",JOptionPane.OK_OPTION);
+            int done = showMsg(jFrame_Configure,error, "Error !!",JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_jButton_autoconfigActionPerformed
 
@@ -1619,7 +1639,7 @@ public class MainPanel extends javax.swing.JFrame {
     private void jButton_cancelConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cancelConfigActionPerformed
         // TODO add your handling code here:
         if(jTextField_NPATH.getText().isEmpty() || jTextField_NSEPATH.getText().isEmpty()||jTextField_LIBPATH.getText().isEmpty()){
-            int x = showMsg("Halcyon wont work as desired without proper configuration. You might encouters errors", "Error!", JOptionPane.OK_OPTION);
+            int x = showMsg(jFrame_Configure,"Halcyon wont work as desired without proper configuration. You might encouters errors", "Error!", JOptionPane.OK_OPTION);
             if(x==JOptionPane.OK_OPTION){
                 jFrame_Configure.setVisible(false);
             }
@@ -1701,7 +1721,7 @@ public class MainPanel extends javax.swing.JFrame {
                 jTextField_NewNSEName.setText(file.getAbsolutePath());
             }
         }catch(Exception e){
-            e.printStackTrace();
+            showMsg(jFrame_NewProject,"Can not save the file. Please check the file permission and try again.", "Cannot save file", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jButton_NewNSEBrowseActionPerformed
 
@@ -1866,26 +1886,7 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jButton_scanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_scanActionPerformed
         // TODO add your handling code here:
-        if(jTabbedPane_workspace.getSelectedComponent()!=null){
-            if(hb.getIsOptions()){
-                jProgressBar_status.setIndeterminate(true);
-                task = new Task(); 
-                task.execute();
-            }else{
-                int sel = JOptionPane.showConfirmDialog(this, "<html>Scan Options are not selected. Running scans with scan options not selected will skip <br>extra settings such as debugging, script arguments, and other options. <br>Do you want to continue ?<html>","Scan Options are not set.",JOptionPane.YES_NO_OPTION);
-                if(sel == JOptionPane.YES_OPTION){
-                    jProgressBar_status.setIndeterminate(true);
-                    task = new Task(); 
-                    task.execute();
-                } 
-            }
-        }else{
-            showMsg("No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
-        }
-        
-        
-        
-         
+        startScan(); 
     }//GEN-LAST:event_jButton_scanActionPerformed
 
     private void jRadioButton_scanTCPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_scanTCPActionPerformed
@@ -1910,7 +1911,7 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jButton_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_stopActionPerformed
         // TODO add your handling code here:
-        jProgressBar_status.setIndeterminate(true);
+        killScan();
     }//GEN-LAST:event_jButton_stopActionPerformed
 
     private void jButton_scanMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_scanMousePressed
@@ -2055,7 +2056,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg("Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSEMouseClicked
 
@@ -2068,7 +2069,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg("Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSEDATAMouseClicked
 
@@ -2081,7 +2082,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg("Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSELIBMouseClicked
 
@@ -2191,6 +2192,16 @@ public class MainPanel extends javax.swing.JFrame {
           
         }
     }//GEN-LAST:event_jFrame_ConfigureWindowGainedFocus
+
+    private void jMenuItem_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_stopActionPerformed
+        // TODO add your handling code here:
+        killScan();
+    }//GEN-LAST:event_jMenuItem_stopActionPerformed
+
+    private void jMenuItem_runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_runActionPerformed
+        // TODO add your handling code here:
+        startScan();
+    }//GEN-LAST:event_jMenuItem_runActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2328,14 +2339,16 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_paste;
     private javax.swing.JMenuItem jMenuItem_print;
     private javax.swing.JMenuItem jMenuItem_rpc;
+    private javax.swing.JMenuItem jMenuItem_run;
     private javax.swing.JMenuItem jMenuItem_socketConnSend;
+    private javax.swing.JMenuItem jMenuItem_stop;
     private javax.swing.JMenuItem jMenuItem_tftp;
     private javax.swing.JMenuItem jMenuItem_undo;
     private javax.swing.JMenuItem jMenuItem_xamp;
     private javax.swing.JMenu jMenu_Edit;
     private javax.swing.JMenu jMenu_File;
     private javax.swing.JMenu jMenu_Help;
-    private javax.swing.JMenu jMenu_Tools;
+    private javax.swing.JMenu jMenu_Proj;
     private javax.swing.JMenu jMenu_codegen;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
@@ -2429,11 +2442,12 @@ public class MainPanel extends javax.swing.JFrame {
         }
     }
     
-    private int showMsg(String msg, String title, int jOption){
+    private int showMsg(Component comp,String msg, String title, int jOption){
         //String msg = "<html>Classpath is not configured. Halcyon will not work as desired without this configuration. <br>Click OK to configure now.</html>";
         //String title = "Configuration Missing";
             
-             int done = JOptionPane.showConfirmDialog(null, msg, title, jOption, JOptionPane.WARNING_MESSAGE);
+             int done = JOptionPane.showConfirmDialog(comp, msg, title, jOption, JOptionPane.WARNING_MESSAGE);
+             
              return done;
              /*
              if(done == JOptionPane.YES_OPTION){
@@ -2461,7 +2475,7 @@ public class MainPanel extends javax.swing.JFrame {
             prop.setProperty("LIBPATH", lib);
             prop.store(out, null);
         } catch (Exception e) {
-            showMsg("Error in configuration. Please try again", "Configuration Error!",JOptionPane.OK_OPTION);
+            showMsg(jFrame_Configure,"Error in configuration. Please try again", "Configuration Error!",JOptionPane.OK_OPTION);
         }
     }
     
@@ -2475,14 +2489,12 @@ public class MainPanel extends javax.swing.JFrame {
             jTextField_NSEPATH.setText(prop.getProperty("NSEPATH"));
             jTextField_LIBPATH.setText(prop.getProperty("LIBPATH"));
         } catch (Exception e) {
-            showMsg("Error in configuration. Please configure correctly and restart Halcyon.", "Configuration Error", JOptionPane.PLAIN_MESSAGE);
+            showMsg(null,"Error in configuration. Please configure correctly and restart Halcyon.", "Configuration Error", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
     private void createNew(StringBuilder sb) {
-        try{
-        
-            
+        try{ 
             codearea = new RSyntaxTextArea();
 
             undoManager = new UndoManager();
@@ -2501,7 +2513,7 @@ public class MainPanel extends javax.swing.JFrame {
             codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
         }catch(Exception e){
-            showMsg("Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
+            showMsg(jFrame_NewProject,"Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
         }
             
     }
@@ -2577,7 +2589,7 @@ public class MainPanel extends javax.swing.JFrame {
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
             
         }catch(Exception e){
-            showMsg("Wrong File Selected", "Error!",JOptionPane.OK_OPTION);
+            showMsg(null,"Wrong File Selected", "Error!",JOptionPane.OK_OPTION);
         }
         
        
@@ -2606,11 +2618,11 @@ public class MainPanel extends javax.swing.JFrame {
                 jTabbedPane_workspace.setTitleAt(jTabbedPane_workspace.getSelectedIndex(), scriptName);
 
             }catch(Exception e){
-                showMsg("Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
+                showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
 
             }
         }catch(Exception e){
-            showMsg("No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
+            showMsg(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
 
         }
     }
@@ -2648,11 +2660,11 @@ public class MainPanel extends javax.swing.JFrame {
                 jTabbedPane_workspace.setTitleAt(jTabbedPane_workspace.getSelectedIndex(), scriptFile.getAbsolutePath());
                 jTabbedPane_workspace.setToolTipTextAt(jTabbedPane_workspace.getSelectedIndex(), scriptFile.getAbsolutePath());
             }catch(Exception e){
-                showMsg("Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
+                showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
 
             }
         }catch(Exception e){
-            showMsg("No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
+            showMsg(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
 
         }
     }
@@ -2663,13 +2675,12 @@ public class MainPanel extends javax.swing.JFrame {
             JTextArea area = (JTextArea)scroll.getViewport().getView();
             boolean done = area.print();
             if(done){
-                JOptionPane.showMessageDialog(null, "Printing Finished", "Information",JOptionPane.INFORMATION_MESSAGE);
+                showMsg(null,"Printing Finished", "Information",JOptionPane.INFORMATION_MESSAGE);
             }else{
-                JOptionPane.showMessageDialog(null, "Printing in Progress.", "Print",JOptionPane.PLAIN_MESSAGE);
-            }
-            
+                showMsg(null, "Printing in Progress.", "Print",JOptionPane.PLAIN_MESSAGE);
+            } 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Printing Failed. Try again.");
+            showMsg(null, "Printing Failed. Try again.", "Print Script",JOptionPane.PLAIN_MESSAGE);
         }
     }
     
@@ -2696,7 +2707,7 @@ public class MainPanel extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Text not found");
                 }
             }else{
-                showMsg("Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.OK_OPTION);
+                showMsg(jFrame_searchBox,"Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.OK_OPTION);
             }
             
         } catch (Exception e) {
@@ -2711,7 +2722,7 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void setOptions() {
         if(jCheckBox_scriptargs.isSelected() && jTextField_scriptargs.getText().isEmpty()){
-            showMsg("Script Argument is empty", "Warning", JOptionPane.PLAIN_MESSAGE); 
+            showMsg(jFrame_Configure,"Script Argument is empty", "Warning", JOptionPane.PLAIN_MESSAGE); 
         }else{ 
             hb.setScriptArgs(jTextField_scriptargs.getText(), jCheckBox_scriptargs.isSelected());
             hb.setDebug(jCheckBox_debug.isSelected());
@@ -2732,7 +2743,7 @@ public class MainPanel extends javax.swing.JFrame {
             int pos = area.getCaretPosition();
             area.insert(code, pos);
         }catch(Exception e){
-            showMsg("Can not generate code. Try Again", "Code Generation Failed.", JOptionPane.PLAIN_MESSAGE);
+            showMsg(null,"Can not generate code. Try Again", "Code Generation Failed.", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -2763,6 +2774,31 @@ public class MainPanel extends javax.swing.JFrame {
         }
         
     }
+
+    private void killScan() {
+        jProgressBar_status.setIndeterminate(false);
+        cmdHandler.killProcess();
+        jTextArea_output.setText(jTextArea_output.getText()+"========= Scannig Terminated by User =========\r\n");
+    }
+
+    private void startScan() {
+        if(jTabbedPane_workspace.getSelectedComponent()!=null){
+            if(hb.getIsOptions()){
+                jProgressBar_status.setIndeterminate(true);
+                task = new Task(); 
+                task.execute();
+            }else{
+                int sel = JOptionPane.showConfirmDialog(this, "<html>Scan Options are not selected. Running scans with scan options not selected will skip <br>extra settings such as debugging, script arguments, and other options. <br>Do you want to continue ?<html>","Scan Options are not set.",JOptionPane.YES_NO_OPTION);
+                if(sel == JOptionPane.YES_OPTION){
+                    jProgressBar_status.setIndeterminate(true);
+                    task = new Task(); 
+                    task.execute();
+                } 
+            }
+        }else{
+            showMsg(null,"No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
  
 
     class Task extends SwingWorker<Void, Void> {
@@ -2781,8 +2817,8 @@ public class MainPanel extends javax.swing.JFrame {
             saveScript(); 
         }
         try {
-                host = getValidTarget(jTextField_host.getText());
-                port = getValidPort(jTextField_port.getText());
+                host = getValidTarget(jTextField_host.getText().trim());
+                port = getValidPort(jTextField_port.getText().trim());
                 File f = new File(hb.getPath());
                 fpath = f.getParent();
                 fname = f.getName();
@@ -2800,12 +2836,15 @@ public class MainPanel extends javax.swing.JFrame {
                         cmd.add("-sU");
                     }
                     cmd.add(host);
-                    cmd.add("-p "+port);
+                    if(!port.equals("default")){
+                        cmd.add("-p "+port);
+                    }
+                    
                     cmd.add("--script="+f.getName());
                     cmd.add("--datadir=\""+f.getParent()+"\"");
                     if(hb.isScriptArg()){
                        
-                        cmd.add("--script-args=\""+hb.getScriptArgs()+"\"");
+                        cmd.add("--script-args=\""+hb.getScriptArgs().trim()+"\"");
                     }
                     if(hb.getPtrace()){
                         cmd.add("--packet-trace");
@@ -2823,12 +2862,12 @@ public class MainPanel extends javax.swing.JFrame {
                     jTextArea_output.setText(jTextArea_output.getText()+"========== Execution Finished =========\r\n");
                     
                 }else{
-                    showMsg("Invalid host or port", "Warning", JOptionPane.PLAIN_MESSAGE);
+                    showMsg(null,"Invalid host or port", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 
             } catch (Exception e) {
-                showMsg("Script failed to execute. This could be due to halcyon misconfiguration. Try again after configuring it properly.", "Script Failed", JOptionPane.PLAIN_MESSAGE);
-                e.printStackTrace();
+                showMsg(null,"Script failed to execute. This could be due to halcyon misconfiguration. Try again after configuring it properly.", "Script Failed", JOptionPane.PLAIN_MESSAGE);
+                
             }
       return null;
     }
@@ -2931,7 +2970,7 @@ public class MainPanel extends javax.swing.JFrame {
             }
         }else{
             if(port.toLowerCase().equals("default")){
-                valid = "0-1024";
+                valid = "default";
             }else if(port.toLowerCase().equals("ftp")){
                 valid = "21";
             }else if(port.toLowerCase().equals("ssh")){
