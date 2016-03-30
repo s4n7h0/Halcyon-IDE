@@ -251,25 +251,29 @@ public class HalcyonBean implements Serializable{
     
     public String getHTTPSpider(){
         
-        return "local crawler = httpspider.Crawler:new( host, port, '/', { scriptname = SCRIPT_NAME } )\n" +
-            "  crawler:set_timeout(10000)\n" +
-            "\n" +
-            "  local result\n" +
-            "  while(true) do\n" +
-            "    local status, r = crawler:crawl()\n" +
-            "    if ( not(status) ) then\n" +
-            "      break\n" +
-            "    end\n" +
-            "    if ( r.response.body:match(str_match) ) then\n" +
-            "       crawler:stop()\n" +
-            "       result = r.url\n" +
-            "       break\n" +
-            "    end\n" +
-            "  end\n" +
-            "\n" +
-            "  return result";
+        return "\tlocal url_list = {}\n"+
+	"\tlocal crawler = httpspider.Crawler:new(host, port, '/', { scriptname = SCRIPT_NAME } )\n"+
+	"\tcrawler:set_timeout(10000)\n"+
+        "\twhile(true) do\n"+
+            "\t\tstatus, r = crawler:crawl()\n"+
+            "\t\t-- the crawler wont fails normally, if it does, it can be a number of reasons, \n"+
+            "\t\tit's better to do an error handle.\n"+
+            "\t\tif ( not(status) ) then\n"+
+                "\t\t\tif ( r.err ) then\n"+
+                    "\t\t\treturn stdnse.format_output(true, \"ERROR: %s\", r.reason)\n"+
+                    "\t\t\telse\n"+
+                    "\t\t\tbreak\n"+
+                    "\t\t\tend\n"+
+
+            "\t\tend\n"+
+            "\t\t--collecting all urls crawled\n"+
+            "\t\ttable.insert(url_list, tostring(r.url))\n"+
+	"\tend\n";
+        
         
     }
+    
+    
     
     public String getIMAP(){
         

@@ -709,6 +709,11 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel6.add(jCheckBox_verbose, gridBagConstraints);
 
         jCheckBox_debug.setText("Debug");
+        jCheckBox_debug.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_debugActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
@@ -2205,6 +2210,10 @@ public class MainPanel extends javax.swing.JFrame {
         startScan();
     }//GEN-LAST:event_jMenuItem_runActionPerformed
 
+    private void jCheckBox_debugActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_debugActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox_debugActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2527,20 +2536,29 @@ public class MainPanel extends javax.swing.JFrame {
       DefaultCompletionProvider provider = new DefaultCompletionProvider();
 
       // common keywords
-      String[] keywords = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "_ENV", "_G", "_VERSION", "assert", "collectgarbage", "dofile", "error", "getfenv", "getmetatable", "ipairs", "load", "loadfile", "loadstring", "module", "next", "pairs", "pcall", "print", "rawequal", "rawget", "rawlen", "rawset", "require", "select", "setfenv", "setmetatable", "tonumber", "tostring", "type", "unpack", "xpcall", "string", "table", "math", "bit32", "coroutine", "io", "os", "debug", "package", "__index", "__newindex", "__call", "__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__len", "__eq", "__lt", "__le", "__gc", "__mode", "byte", "char", "dump", "find", "format", "gmatch", "gsub", "len", "lower", "match", "rep", "reverse", "sub", "upper", "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "deg", "exp", "floor", "fmod", "frexp", "ldexp", "log", "log10", "max", "min", "modf", "pow", "rad", "random", "randomseed", "sin", "sinh", "sqrt", "tan", "tanh", "arshift", "band", "bnot", "bor", "btest", "bxor", "extract", "lrotate", "lshift", "replace", "rrotate", "rshift", "shift", "string.byte", "string.char", "string.dump", "string.find", "string.format", "string.gmatch", "string.gsub", "string.len", "string.lower", "string.match", "string.rep", "string.reverse", "string.sub", "string.upper", "table.concat", "table.insert", "table.maxn", "table.pack", "table.remove", "table.sort", "table.unpack", "math.abs", "math.acos", "math.asin", "math.atan", "math.atan2", "math.ceil", "math.cos", "math.cosh", "math.deg", "math.exp", "math.floor", "math.fmod", "math.frexp", "math.huge", "math.ldexp", "math.log", "math.log10", "math.max", "math.min", "math.modf", "math.pi", "math.pow", "math.rad", "math.random", "math.randomseed", "math.sin", "math.sinh", "math.sqrt", "math.tan", "math.tanh", "bit32.arshift", "bit32.band", "bit32.bnot", "bit32.bor", "bit32.btest", "bit32.bxor", "bit32.extract", "bit32.lrotate", "bit32.lshift", "bit32.replace", "bit32.rrotate", "bit32.rshift", "close", "flush", "lines", "read", "seek", "setvbuf", "write", "clock", "date", "difftime", "execute", "exit", "getenv", "remove", "rename", "setlocale", "time", "tmpname", "coroutine.create", "coroutine.resume", "coroutine.running", "coroutine.status", "coroutine.wrap", "coroutine.yield", "io.close", "io.flush", "io.input", "io.lines", "io.open", "io.output", "io.popen", "io.read", "io.tmpfile", "io.type", "io.write", "io.stderr", "io.stdin", "io.stdout", "os.clock", "os.date", "os.difftime", "os.execute", "os.exit", "os.getenv", "os.remove", "os.rename", "os.setlocale", "os.time", "os.tmpname", "debug.debug", "debug.getfenv", "debug.gethook", "debug.getinfo", "debug.getlocal", "debug.getmetatable", "debug.getregistry", "debug.getupvalue", "debug.getuservalue", "debug.setfenv", "debug.sethook", "debug.setlocal", "debug.setmetatable", "debug.setupvalue", "debug.setuservalue", "debug.traceback", "debug.upvalueid", "debug.upvaluejoin", "package.cpath", "package.loaded", "package.loaders", "package.loadlib", "package.path", "package.preload", "package.seeall"};
+      String[] keyword1 = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "_ENV", "_G", "_VERSION", "assert", "collectgarbage", "dofile", "error", "getfenv", "getmetatable", "ipairs", "load", "loadfile", "loadstring", "module", "next", "pairs", "pcall", "print", "rawequal", "rawget", "rawlen", "rawset", "require", "select", "setfenv", "setmetatable", "tonumber", "tostring", "type", "unpack", "xpcall", "string", "table", "math", "bit32", "coroutine", "io", "os", "debug", "package", "__index", "__newindex", "__call", "__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__len", "__eq", "__lt", "__le", "__gc", "__mode", "byte", "char", "dump", "find", "format", "gmatch", "gsub", "len", "lower", "match", "rep", "reverse", "sub", "upper", "abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "deg", "exp", "floor", "fmod", "frexp", "ldexp", "log", "log10", "max", "min", "modf", "pow", "rad", "random", "randomseed", "sin", "sinh", "sqrt", "tan", "tanh", "arshift", "band", "bnot", "bor", "btest", "bxor", "extract", "lrotate", "lshift", "replace", "rrotate", "rshift", "shift", "string.byte", "string.char", "string.dump", "string.find", "string.format", "string.gmatch", "string.gsub", "string.len", "string.lower", "string.match", "string.rep", "string.reverse", "string.sub", "string.upper", "table.concat", "table.insert", "table.maxn", "table.pack", "table.remove", "table.sort", "table.unpack", "math.abs", "math.acos", "math.asin", "math.atan", "math.atan2", "math.ceil", "math.cos", "math.cosh", "math.deg", "math.exp", "math.floor", "math.fmod", "math.frexp", "math.huge", "math.ldexp", "math.log", "math.log10", "math.max", "math.min", "math.modf", "math.pi", "math.pow", "math.rad", "math.random", "math.randomseed", "math.sin", "math.sinh", "math.sqrt", "math.tan", "math.tanh", "bit32.arshift", "bit32.band", "bit32.bnot", "bit32.bor", "bit32.btest", "bit32.bxor", "bit32.extract", "bit32.lrotate", "bit32.lshift", "bit32.replace", "bit32.rrotate", "bit32.rshift", "close", "flush", "lines", "read", "seek", "setvbuf", "write", "clock", "date", "difftime", "execute", "exit", "getenv", "remove", "rename", "setlocale", "time", "tmpname", "coroutine.create", "coroutine.resume", "coroutine.running", "coroutine.status", "coroutine.wrap", "coroutine.yield", "io.close", "io.flush", "io.input", "io.lines", "io.open", "io.output", "io.popen", "io.read", "io.tmpfile", "io.type", "io.write", "io.stderr", "io.stdin", "io.stdout", "os.clock", "os.date", "os.difftime", "os.execute", "os.exit", "os.getenv", "os.remove", "os.rename", "os.setlocale", "os.time", "os.tmpname", "debug.debug", "debug.getfenv", "debug.gethook", "debug.getinfo", "debug.getlocal", "debug.getmetatable", "debug.getregistry", "debug.getupvalue", "debug.getuservalue", "debug.setfenv", "debug.sethook", "debug.setlocal", "debug.setmetatable", "debug.setupvalue", "debug.setuservalue", "debug.traceback", "debug.upvalueid", "debug.upvaluejoin", "package.cpath", "package.loaded", "package.loaders", "package.loadlib", "package.path", "package.preload", "package.seeall"};
+      String[] keyword2 = {"description","@usage","@output","PORT","STATE","SERVICE","REASON", "require","portrule","shortport","stdnse","registry"};
+      String[] keywords = new String[keyword1.length+keyword2.length];
+      System.arraycopy(keyword1, 0, keywords, 0, keyword1.length);
+      System.arraycopy(keyword2, 0, keywords, keyword1.length, keyword2.length);
       
       Hashtable ht = new Hashtable();
-      ht.put("echo", "echo( )");
+      ht.put("echo", "echo( )"); 
       ht.put("descr", "description = [[ ]]");
       ht.put("categ", "categories =  { }");
-      ht.put("require", "require ( )");
+      ht.put("require", "require \" \" ");
       ht.put("acl_group", "acl_group_to_long_string ( )");
       ht.put("acls_to", "acls_to_long_string ()");
-      ht.put("portrule", "portrule = shortport.http");
+      ht.put("porthttprule", "portrule = shortport.http");
       ht.put("port", "portrule = shortport.port_or_service (port, \"service\", {\"tcp\"})");
+      ht.put("stdout", "stdnse.format_output(true, response)");
+      ht.put("portaction", "portaction = function(host, port)\\nend");
+      ht.put("hostaction", "hostaction = function(host)\\nend");
+      ht.put("preaction", "preaction = function()\\nend");
+      ht.put("postaction", "postaction = function()\\nend");
+      ht.put("action", "action = function( host, port )");
       
       
-       
       
       // Add auto completions for all possible LUA keywords. 
       for(String keyword:keywords){
@@ -2854,8 +2872,8 @@ public class MainPanel extends javax.swing.JFrame {
                         cmd.add("-p "+port);
                     }
                     
-                    cmd.add("--script="+f.getName());
-                    cmd.add("--datadir=\""+f.getParent()+"\"");
+                    cmd.add("--script="+ f.getName());
+                    cmd.add("--datadir=\""+f.getParent().toString().trim()+"\"");
                     if(hb.isScriptArg()){
                        
                         cmd.add("--script-args=\""+hb.getScriptArgs().trim()+"\"");

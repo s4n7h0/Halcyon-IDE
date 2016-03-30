@@ -78,8 +78,10 @@ public class ScriptBuilder {
     
     public String getPortrule(){
         String rule = null;
-        if(scriptService.equals("default")){
-            rule = "portrule = function(host, port)" ;
+       if(scriptService.equals("default")){
+            rule = "portrule = function( host, port )\n"+
+                    "\treturn true\n"+
+                    "end\n";
         }else{
             if(port.equals("80") || service.equals("HTTP")){
                 rule = "portrule = shortport.http";
