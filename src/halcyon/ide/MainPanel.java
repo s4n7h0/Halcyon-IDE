@@ -2870,7 +2870,6 @@ public class MainPanel extends javax.swing.JFrame {
                         cmd.add("-d");
                     }
                     jTextArea_output.setText("========== Execution Started =========\r\n");
-                    System.out.println("CMD " + cmd);
                     cmdHandler = new CommandExecutionHandler(cmd);
                     jTextArea_output.setText(jTextArea_output.getText()+"\r\n"+cmdHandler.executeCommand());
                     jTextArea_output.setText(jTextArea_output.getText()+"========== Execution Finished =========\r\n");
