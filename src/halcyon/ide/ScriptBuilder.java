@@ -21,15 +21,12 @@ public class ScriptBuilder {
         String t = "{";
         
        int i = 0;
-        if(categ.length<0){
             for(Object c: categ){
                 t = t + "\""+c+"\"";
                  if(i<(categ.length-1)) t = t+", ";
                  i++;
             } 
-        }else{
-            t = t + "\"default\"";
-        }
+        
             
         
         t = t+"}";

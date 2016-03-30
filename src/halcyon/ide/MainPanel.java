@@ -223,6 +223,7 @@ public class MainPanel extends javax.swing.JFrame {
         jFrame_Configure.setTitle("Configure");
         jFrame_Configure.setAlwaysOnTop(true);
         jFrame_Configure.setMinimumSize(new java.awt.Dimension(500, 230));
+        jFrame_Configure.setPreferredSize(new java.awt.Dimension(500, 230));
         jFrame_Configure.setResizable(false);
         jFrame_Configure.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -478,6 +479,7 @@ public class MainPanel extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList_NewNSECateg.setSelectedIndex(3);
         jList_NewNSECateg.setVisibleRowCount(4);
         jScrollPane6.setViewportView(jList_NewNSECateg);
 
@@ -2510,7 +2512,7 @@ public class MainPanel extends javax.swing.JFrame {
             RTextScrollPane codePane = new RTextScrollPane(codearea);
             File f = hb.getFile();
             jTabbedPane_workspace.add(f.getAbsolutePath(),codePane);
-            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace));
+            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
         }catch(Exception e){
             showMsg(jFrame_NewProject,"Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
@@ -2534,6 +2536,10 @@ public class MainPanel extends javax.swing.JFrame {
       ht.put("require", "require ( )");
       ht.put("acl_group", "acl_group_to_long_string ( )");
       ht.put("acls_to", "acls_to_long_string ()");
+      ht.put("portrule", "portrule = shortport.http");
+      ht.put("port", "portrule = shortport.port_or_service (port, \"service\", {\"tcp\"})");
+      
+      
        
       
       // Add auto completions for all possible LUA keywords. 
@@ -2585,7 +2591,7 @@ public class MainPanel extends javax.swing.JFrame {
             }
             RTextScrollPane codePane = new RTextScrollPane(codearea);
             jTabbedPane_workspace.add(scriptFile.getAbsolutePath(),codePane);
-            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace));
+            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
             
         }catch(Exception e){
@@ -2604,9 +2610,7 @@ public class MainPanel extends javax.swing.JFrame {
 
             String scriptCode = area.getText();
             String scriptName = jTabbedPane_workspace.getTitleAt(jTabbedPane_workspace.getSelectedIndex());
-            if(scriptName.contains("*")){
-                scriptName = scriptName.substring(0, scriptName.length()-1);
-            }
+            
             File scriptFile = new File(scriptName);
             try{
                     FileWriter fw = new FileWriter(scriptFile.getAbsoluteFile());
@@ -2614,9 +2618,13 @@ public class MainPanel extends javax.swing.JFrame {
                     bw.write(scriptCode);
                     bw.close();
 
-                codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace));
+                codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
                 jTabbedPane_workspace.setTitleAt(jTabbedPane_workspace.getSelectedIndex(), scriptName);
 
+                jLabel_Status.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+                jLabel_Status.setForeground(new java.awt.Color(0, 0, 0));
+                jLabel_Status.setText(jLabel_Status.getText().replace("Unsaved: ", ""));
+                
             }catch(Exception e){
                 showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
 
@@ -2656,9 +2664,14 @@ public class MainPanel extends javax.swing.JFrame {
                     bw.write(scriptCode);
                     bw.close();
                 }
-                codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace));
+                codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
                 jTabbedPane_workspace.setTitleAt(jTabbedPane_workspace.getSelectedIndex(), scriptFile.getAbsolutePath());
                 jTabbedPane_workspace.setToolTipTextAt(jTabbedPane_workspace.getSelectedIndex(), scriptFile.getAbsolutePath());
+                
+                jLabel_Status.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+                jLabel_Status.setForeground(new java.awt.Color(0, 0, 0));
+                jLabel_Status.setText(jLabel_Status.getText().replace("Unsaved: ", ""));
+                
             }catch(Exception e){
                 showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
 
@@ -2767,7 +2780,8 @@ public class MainPanel extends javax.swing.JFrame {
             }
             RTextScrollPane codePane = new RTextScrollPane(codearea);
             jTabbedPane_workspace.add(f.getAbsolutePath(),codePane);
-            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace)); 
+            //jTabbedPane_workspace.setTitleAt(jTabbedPane_workspace.getTitleAt(jTabbedPane_workspace.gets)+"*");
+            codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status)); 
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
         }catch(Exception e){
              
@@ -2813,7 +2827,7 @@ public class MainPanel extends javax.swing.JFrame {
         InputStream in;
         java.util.List<String> cmd = new ArrayList<String>(); 
         
-        if(jTabbedPane_workspace.getTitleAt(jTabbedPane_workspace.getSelectedIndex()).contains("*")){
+        if(jLabel_Status.getText().contains("Unsaved: ")){
             saveScript(); 
         }
         try {
@@ -2856,7 +2870,7 @@ public class MainPanel extends javax.swing.JFrame {
                         cmd.add("-d");
                     }
                     jTextArea_output.setText("========== Execution Started =========\r\n");
-                     
+                    System.out.println("CMD " + cmd);
                     cmdHandler = new CommandExecutionHandler(cmd);
                     jTextArea_output.setText(jTextArea_output.getText()+"\r\n"+cmdHandler.executeCommand());
                     jTextArea_output.setText(jTextArea_output.getText()+"========== Execution Finished =========\r\n");
@@ -3025,26 +3039,44 @@ public class MainPanel extends javax.swing.JFrame {
 }
 
 class MyDocumentListener implements DocumentListener{
-    JTabbedPane p;
-    String title;
-    public MyDocumentListener(JTabbedPane pane) {
-        p = pane;
-        title = pane.getTitleAt(pane.getSelectedIndex());
+    
+    JLabel status;
+    public MyDocumentListener(JTabbedPane t, JLabel status) {
+       
+        this.status=status;
+        
     }
     
     public void insertUpdate(DocumentEvent de){
-        p.setTitleAt(p.getSelectedIndex(),title+"*");
+        
+        if(!status.getText().contains("Unsaved:")){
+            status.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+            status.setForeground(new java.awt.Color(255, 11, 21));
+
+            status.setText("Unsaved: "+status.getText());
+        }
+       
     }
     
     
    
     public void removeUpdate(DocumentEvent e) {
-            p.setTitleAt(p.getSelectedIndex(),title+"*");
+        if(!status.getText().contains("Unsaved")){
+            status.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+            status.setForeground(new java.awt.Color(255, 11, 21));
+
+            status.setText("Unsaved: "+status.getText());
+        }
     }
 
     
     public void changedUpdate(DocumentEvent e) {
-        p.setTitleAt(p.getSelectedIndex(),title+"*");
+        if(!status.getText().contains("Unsaved")){
+            status.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+            status.setForeground(new java.awt.Color(255, 11, 21));
+
+            status.setText("Unsaved: "+status.getText());
+        }
     }
     
 }
