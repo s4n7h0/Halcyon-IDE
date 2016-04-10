@@ -170,6 +170,9 @@ public class MainPanel extends javax.swing.JFrame {
         jMenuItem_SaveAs = new javax.swing.JMenuItem();
         jMenuItem_Close = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem_exportScript = new javax.swing.JMenuItem();
+        jMenuItem_updateScriptDB = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_print = new javax.swing.JMenuItem();
         jMenuItem_Exit = new javax.swing.JMenuItem();
         jMenu_Edit = new javax.swing.JMenu();
@@ -216,6 +219,7 @@ public class MainPanel extends javax.swing.JFrame {
         jMenuItem_tftp = new javax.swing.JMenuItem();
         jMenuItem_xamp = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem_scanSettings = new javax.swing.JMenuItem();
         jMenuItem_configure = new javax.swing.JMenuItem();
         jMenu_Help = new javax.swing.JMenu();
         jMenuItem_about = new javax.swing.JMenuItem();
@@ -223,7 +227,6 @@ public class MainPanel extends javax.swing.JFrame {
         jFrame_Configure.setTitle("Configure");
         jFrame_Configure.setAlwaysOnTop(true);
         jFrame_Configure.setMinimumSize(new java.awt.Dimension(500, 230));
-        jFrame_Configure.setPreferredSize(new java.awt.Dimension(500, 230));
         jFrame_Configure.setResizable(false);
         jFrame_Configure.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -708,6 +711,7 @@ public class MainPanel extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel6.add(jCheckBox_verbose, gridBagConstraints);
 
+        jCheckBox_debug.setSelected(true);
         jCheckBox_debug.setText("Debug");
         jCheckBox_debug.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -861,7 +865,7 @@ public class MainPanel extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Halcyon IDE 2.0");
+        setTitle("Halcyon IDE 2.0 - IDE for Nmap Script Development");
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -1190,6 +1194,23 @@ public class MainPanel extends javax.swing.JFrame {
         jMenu_File.add(jMenuItem_Close);
         jMenu_File.add(jSeparator1);
 
+        jMenuItem_exportScript.setText("Export Script");
+        jMenuItem_exportScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_exportScriptActionPerformed(evt);
+            }
+        });
+        jMenu_File.add(jMenuItem_exportScript);
+
+        jMenuItem_updateScriptDB.setText("Update Script DB");
+        jMenuItem_updateScriptDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_updateScriptDBActionPerformed(evt);
+            }
+        });
+        jMenu_File.add(jMenuItem_updateScriptDB);
+        jMenu_File.add(jSeparator8);
+
         jMenuItem_print.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem_print.setText("Print");
         jMenuItem_print.addActionListener(new java.awt.event.ActionListener() {
@@ -1511,6 +1532,14 @@ public class MainPanel extends javax.swing.JFrame {
         jMenu_Proj.add(jMenu_codegen);
         jMenu_Proj.add(jSeparator7);
 
+        jMenuItem_scanSettings.setText("Scan Settings");
+        jMenuItem_scanSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_scanSettingsActionPerformed(evt);
+            }
+        });
+        jMenu_Proj.add(jMenuItem_scanSettings);
+
         jMenuItem_configure.setText("Configure");
         jMenuItem_configure.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1698,11 +1727,12 @@ public class MainPanel extends javax.swing.JFrame {
         jFrame_NewProject.pack();
         jFrame_NewProject.setLocationRelativeTo(null);
         jFrame_NewProject.setVisible(true);
+        resetNewProjUI();
     }//GEN-LAST:event_jButton_newActionPerformed
 
     private void jFrame_NewProjectWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jFrame_NewProjectWindowOpened
         // TODO add your handling code here: 
-        jTextField_NewNSEAuthor.setText(System.getProperty("user.name"));
+       // resetNewProjUI();
     }//GEN-LAST:event_jFrame_NewProjectWindowOpened
 
     private void jButton_NewCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewCreateActionPerformed
@@ -1737,6 +1767,7 @@ public class MainPanel extends javax.swing.JFrame {
         jFrame_NewProject.pack();
         jFrame_NewProject.setLocationRelativeTo(null);
         jFrame_NewProject.setVisible(true);
+        resetNewProjUI();
     }//GEN-LAST:event_jMenuItem_NewActionPerformed
 
     private void jButton_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_openActionPerformed
@@ -2214,6 +2245,24 @@ public class MainPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox_debugActionPerformed
 
+    private void jMenuItem_scanSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_scanSettingsActionPerformed
+        // TODO add your handling code here:
+        jFrame_ScanOptions.pack();
+        jFrame_ScanOptions.setLocationRelativeTo(null);
+        jFrame_ScanOptions.setVisible(true);
+    }//GEN-LAST:event_jMenuItem_scanSettingsActionPerformed
+
+    private void jMenuItem_exportScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_exportScriptActionPerformed
+        // TODO add your handling code here:
+        jProgressBar_status.setIndeterminate(true);
+        exportScript();
+    }//GEN-LAST:event_jMenuItem_exportScriptActionPerformed
+
+    private void jMenuItem_updateScriptDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_updateScriptDBActionPerformed
+        // TODO add your handling code here:
+        updateScriptDB();
+    }//GEN-LAST:event_jMenuItem_updateScriptDBActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2339,6 +2388,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_dnsQ;
     private javax.swing.JMenuItem jMenuItem_dnssd;
     private javax.swing.JMenuItem jMenuItem_drda;
+    private javax.swing.JMenuItem jMenuItem_exportScript;
     private javax.swing.JMenuItem jMenuItem_find;
     private javax.swing.JMenuItem jMenuItem_goip;
     private javax.swing.JMenuItem jMenuItem_imap;
@@ -2351,10 +2401,12 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_print;
     private javax.swing.JMenuItem jMenuItem_rpc;
     private javax.swing.JMenuItem jMenuItem_run;
+    private javax.swing.JMenuItem jMenuItem_scanSettings;
     private javax.swing.JMenuItem jMenuItem_socketConnSend;
     private javax.swing.JMenuItem jMenuItem_stop;
     private javax.swing.JMenuItem jMenuItem_tftp;
     private javax.swing.JMenuItem jMenuItem_undo;
+    private javax.swing.JMenuItem jMenuItem_updateScriptDB;
     private javax.swing.JMenuItem jMenuItem_xamp;
     private javax.swing.JMenu jMenu_Edit;
     private javax.swing.JMenu jMenu_File;
@@ -2386,6 +2438,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JSplitPane jSplitPane_workpane;
     private javax.swing.JSplitPane jSplitPane_workspace;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -2416,6 +2469,7 @@ public class MainPanel extends javax.swing.JFrame {
     private UndoManager undoManager;
     CommandExecutionHandler cmdHandler;
     private Task task;
+    private UpdateDB updateDB;
     
     // user defined functions
     private void setIcon() {
@@ -2831,6 +2885,58 @@ public class MainPanel extends javax.swing.JFrame {
             showMsg(null,"No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }
+
+    private void resetNewProjUI() {
+        jTextField_NewNSEAuthor.setText(System.getProperty("user.name"));
+        jList_NewNSECateg.setSelectedIndex(3);
+        jTextField_NewNSEName.setText("");
+        jTextArea_NewNSEDesc.setText("");
+        jComboBox_NewNSEService.setSelectedIndex(0);
+    }
+
+    private void exportScript() {
+        try {
+            
+            String scriptName = jTabbedPane_workspace.getTitleAt(jTabbedPane_workspace.getSelectedIndex());
+            File f = new File(scriptName);
+            String fname = f.getName();
+            Properties prop = new Properties(); 
+            InputStream in = new FileInputStream("halcyon.settings");
+            prop.load(in);
+            String expScriptName = prop.getProperty("NSEPATH")+""+fname;
+            jTextArea_output.setText("Exportig "+scriptName+" to Nmap Script path "+expScriptName+"\r\n");
+            
+            File exportScript = new File(expScriptName);
+            exportScript.setExecutable(true);
+            exportScript.setReadable(true);
+            exportScript.setWritable(true);
+            InputStream inStream = new FileInputStream(new File(scriptName));
+            OutputStream outStream = new FileOutputStream(exportScript);
+            
+            byte[] buffer = new byte[1024];
+    		
+    	    int length;
+    	    while ((length = inStream.read(buffer)) > 0){
+    	    	outStream.write(buffer, 0, length);
+    	    }
+    	 
+    	    inStream.close();
+    	    outStream.close();
+            
+            updateScriptDB();
+            
+        } catch (Exception e) {
+            showMsg(null, "Export Failed. Check the file permissions of nmap script path.", "Export Failed", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    private void updateScriptDB() {
+        try {
+            updateDB = new UpdateDB(); 
+            updateDB.execute();
+        } catch (Exception e) {
+        }
+    }
  
 
     class Task extends SwingWorker<Void, Void> {
@@ -2863,21 +2969,23 @@ public class MainPanel extends javax.swing.JFrame {
                     nmap = prop.getProperty("NPATH");
                     
                     // command building 
-                    cmd.add(nmap);
+                    cmd.add(nmap); 
+                   
+                    cmd.add("--script="+ f.getAbsolutePath()+"");
+                    cmd.add("--datadir=\""+f.getParent().toString().trim()+"\"");
+                    if(hb.isScriptArg()){
+                       
+                        cmd.add("--script-args=\""+hb.getScriptArgs().trim()+"\"");
+                    }
+                    
                     if(hb.getScanType().equals("UDP Scan")){
-                        cmd.add("-sU");
+                        cmd.add("-sU"); 
                     }
                     cmd.add(host);
                     if(!port.equals("default")){
                         cmd.add("-p "+port);
                     }
                     
-                    cmd.add("--script="+ f.getName());
-                    cmd.add("--datadir=\""+f.getParent().toString().trim()+"\"");
-                    if(hb.isScriptArg()){
-                       
-                        cmd.add("--script-args=\""+hb.getScriptArgs().trim()+"\"");
-                    }
                     if(hb.getPtrace()){
                         cmd.add("--packet-trace");
                     }
@@ -2887,6 +2995,7 @@ public class MainPanel extends javax.swing.JFrame {
                     if(hb.getDebug()){
                         cmd.add("-d");
                     }
+                    System.out.println(cmd);
                     jTextArea_output.setText("========== Execution Started =========\r\n");
                     cmdHandler = new CommandExecutionHandler(cmd);
                     jTextArea_output.setText(jTextArea_output.getText()+"\r\n"+cmdHandler.executeCommand());
@@ -2913,6 +3022,53 @@ public class MainPanel extends javax.swing.JFrame {
       setCursor(null); // turn off the wait cursor 
     }
   }
+  
+    class UpdateDB extends SwingWorker<Void, Void> {
+    /*
+     * Main task. Executed in background thread.
+     */
+    @Override
+    public Void doInBackground() {
+      String host,port,fpath,fname,nmap; 
+        StringBuilder output = null;
+        Properties prop = new Properties(); 
+        InputStream in;
+        java.util.List<String> cmd = new ArrayList<String>(); 
+        jTextArea_output.setText(jTextArea_output.getText()+"\r\n========== Updating Script DB =========\r\n");
+ 
+        try { 
+            in = new FileInputStream("halcyon.settings");
+            prop.load(in);
+            nmap = prop.getProperty("NPATH");
+                    
+            cmd.add(nmap); 
+            cmd.add("--script-updatedb");
+            
+            cmdHandler = new CommandExecutionHandler(cmd);
+            jTextArea_output.setText(jTextArea_output.getText()+"\r\n"+cmdHandler.executeCommand());
+            jTextArea_output.setText(jTextArea_output.getText()+"========== Script DB Updated =========\r\n");
+                
+            } catch (Exception e) {
+                showMsg(null,"Failed to update script database.", "Script DB Update Failed", JOptionPane.PLAIN_MESSAGE);
+            }
+      return null;
+    }
+
+    /*
+     * Executed in event dispatching thread
+     */
+    @Override
+    public void done() {
+      Toolkit.getDefaultToolkit().beep();
+      jProgressBar_status.setIndeterminate(false);
+      setCursor(null); // turn off the wait cursor 
+    }
+  }
+    
+    
+    
+    
+    
     
     private static String getValidTarget(String ip){
         final String DOMAIN_NAME_PATTERN = "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

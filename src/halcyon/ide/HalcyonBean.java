@@ -21,7 +21,7 @@ public class HalcyonBean implements Serializable{
     File f;
     boolean isArgs = false;
     boolean isVerbose = false;
-    boolean isDebug = false;
+    boolean isDebug = true;
     boolean isPtrace = false;
     boolean isOption = false;
     
