@@ -1,5 +1,6 @@
 Halcyon IDE
 =======
+[![Black Hat Arsenal](https://www.toolswatch.org/badges/arsenal/2016.svg)](https://www.blackhat.com/us-16/arsenal.html)
 
 The First IDE for Nmap Script Engine (NSE) Development.
 
