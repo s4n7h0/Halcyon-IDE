@@ -1,12 +1,12 @@
-Halcyon IDE
-=======
-[![Black Hat Arsenal](https://www.toolswatch.org/badges/arsenal/2016.svg)](https://www.blackhat.com/us-16/arsenal.html)
 
-The First IDE for Nmap Script Engine (NSE) Development.
+# Halcyon IDE 
 
-Halcyon IDE is the first (as far as I know) IDE specifically focused on Nmap Script (NSE) Development. It is free to use, java based application that comes with code intelligence, code builder, auto-completion, debugging, and also a bunch of other features like other programming development IDE(s) has. 
+[![Arsenal (USA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/06/the-black-hat-arsenal-usa-2016-remarkable-line-up/)  [![Arsenal (ASIA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/03/black-hat-arsenal-asia-2016-speakers-line-up/) 
 
-Halcyon IDE can understand Nmap library as well as traditional LUA syntax. Possible repetitive codes such as web crawling, bruteforcing etc., is pre-built in the IDE and this makes easy for script writers to save their time while developing majority of test scenarios. 
+### Description
+Halcyon is the first IDE specifically focused on Nmap Script (NSE) Development. This research idea was originated while writing custom Nmap Scripts for Enterprise Penetration Testing Scenarios. The existing challenge in developing Nmap Scripts (NSE) was the lack of a development environment that gives easiness in building custom scripts for real world scanning, at the same time fast enough to develop such custom scripts. Halcyon is free to use, java based application that comes with code intelligence, code builder, auto-completion, debugging and error correction options and also a bunch of other features like other development IDE(s) has. This research was started to give better development interface/environment to researchers and thus enhance the number of NSE writers in the information security community.
+
+Halcyon IDE can understand Nmap library as well as traditional LUA syntax. Possible repetitive codes such as web crawling, bruteforcing etc., is pre-built in the IDE and this makes easy for script writers to save their time while developing majority of test scenarios.
 
 ![Image of Halcyon IDE 2.0]
 (http://halcyon-ide.org/images/halcyon_ide_2.0.png) 
