@@ -14,4 +14,4 @@ More documentation and presentation can be available on the official website htt
 
 License and Copyright
 =====================
-Halcyon is under MIT License https://halcyon-ide.org/license/ 
+Halcyon IDE is released under MIT License https://halcyon-ide.org/license/ 
