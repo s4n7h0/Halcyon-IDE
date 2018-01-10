@@ -8,6 +8,7 @@ package halcyon.ide;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.*;
@@ -107,24 +108,29 @@ public class MainPanel extends javax.swing.JFrame {
         jButton_FindNext = new javax.swing.JButton();
         jFrame_ScanOptions = new javax.swing.JFrame();
         jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jRadioButton_scanTCP = new javax.swing.JRadioButton();
+        jRadioButton_scanUDP = new javax.swing.JRadioButton();
+        jPanel9 = new javax.swing.JPanel();
         jCheckBox_scriptargs = new javax.swing.JCheckBox();
         jTextField_scriptargs = new javax.swing.JTextField();
+        jCheckBox_scriptargsfile = new javax.swing.JCheckBox();
+        jTextField_scriptargsfile = new javax.swing.JTextField();
+        jButton_scriptargs_browse = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
         jCheckBox_ptrace = new javax.swing.JCheckBox();
         jCheckBox_verbose = new javax.swing.JCheckBox();
         jCheckBox_debug = new javax.swing.JCheckBox();
-        jRadioButton_scanTCP = new javax.swing.JRadioButton();
-        jRadioButton_scanUDP = new javax.swing.JRadioButton();
-        jButton_ApplyOptions = new javax.swing.JButton();
         jButton_CancelOptions = new javax.swing.JButton();
+        jButton_ApplyOptions = new javax.swing.JButton();
         buttonGroup_scanType = new javax.swing.ButtonGroup();
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem_closeWorkSpace = new javax.swing.JMenuItem();
         jMenuItem_closeAll = new javax.swing.JMenuItem();
-        jFrame_About = new javax.swing.JFrame();
-        jPanel11 = new javax.swing.JPanel();
+        jDialog_About = new javax.swing.JDialog();
+        jPanel8 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jButton_aboutCLOSE = new javax.swing.JButton();
+        jLabel_About = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         jButton_new = new javax.swing.JButton();
         jButton_open = new javax.swing.JButton();
@@ -226,6 +232,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         jFrame_Configure.setTitle("Configure");
         jFrame_Configure.setAlwaysOnTop(true);
+        jFrame_Configure.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
         jFrame_Configure.setMinimumSize(new java.awt.Dimension(500, 230));
         jFrame_Configure.setResizable(false);
         jFrame_Configure.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -422,6 +429,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         jFrame_NewProject.setTitle("Create New Project");
         jFrame_NewProject.setAlwaysOnTop(true);
+        jFrame_NewProject.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
         jFrame_NewProject.setResizable(false);
         jFrame_NewProject.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -593,6 +601,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         jFrame_searchBox.setTitle("Find");
         jFrame_searchBox.setAlwaysOnTop(true);
+        jFrame_searchBox.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
         jFrame_searchBox.setResizable(false);
 
         java.awt.GridBagLayout jPanel5Layout = new java.awt.GridBagLayout();
@@ -668,61 +677,11 @@ public class MainPanel extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jFrame_ScanOptions.setTitle("Scanning Options");
+        jFrame_ScanOptions.setTitle("Scan Settings");
         jFrame_ScanOptions.setAlwaysOnTop(true);
+        jFrame_ScanOptions.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
 
-        java.awt.GridBagLayout jPanel6Layout = new java.awt.GridBagLayout();
-        jPanel6Layout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanel6Layout.rowHeights = new int[] {0, 7, 0, 7, 0};
-        jPanel6.setLayout(jPanel6Layout);
-
-        jCheckBox_scriptargs.setText("Script Arguments");
-        jCheckBox_scriptargs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox_scriptargsActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        jPanel6.add(jCheckBox_scriptargs, gridBagConstraints);
-
-        jTextField_scriptargs.setEditable(false);
-        jTextField_scriptargs.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 130;
-        jPanel6.add(jTextField_scriptargs, gridBagConstraints);
-
-        jCheckBox_ptrace.setText("Packet Trace");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel6.add(jCheckBox_ptrace, gridBagConstraints);
-
-        jCheckBox_verbose.setText("Verbose");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel6.add(jCheckBox_verbose, gridBagConstraints);
-
-        jCheckBox_debug.setSelected(true);
-        jCheckBox_debug.setText("Debug");
-        jCheckBox_debug.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox_debugActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel6.add(jCheckBox_debug, gridBagConstraints);
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Scan Type"));
 
         buttonGroup_scanType.add(jRadioButton_scanTCP);
         jRadioButton_scanTCP.setSelected(true);
@@ -732,11 +691,6 @@ public class MainPanel extends javax.swing.JFrame {
                 jRadioButton_scanTCPActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel6.add(jRadioButton_scanTCP, gridBagConstraints);
 
         buttonGroup_scanType.add(jRadioButton_scanUDP);
         jRadioButton_scanUDP.setText("UDP Scan");
@@ -745,11 +699,141 @@ public class MainPanel extends javax.swing.JFrame {
                 jRadioButton_scanUDPActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel6.add(jRadioButton_scanUDP, gridBagConstraints);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jRadioButton_scanTCP, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton_scanUDP, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton_scanTCP)
+                    .addComponent(jRadioButton_scanUDP))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Script Arguments"));
+
+        jCheckBox_scriptargs.setText("Choose this option to select script arguments as command line option (--script-args)");
+        jCheckBox_scriptargs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_scriptargsActionPerformed(evt);
+            }
+        });
+
+        jTextField_scriptargs.setEditable(false);
+
+        jCheckBox_scriptargsfile.setText("Choose this option to upload file as script arguments (--script-args-file)");
+        jCheckBox_scriptargsfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_scriptargsfileActionPerformed(evt);
+            }
+        });
+
+        jTextField_scriptargsfile.setEditable(false);
+        jTextField_scriptargsfile.setText(" ");
+
+        jButton_scriptargs_browse.setText("...");
+        jButton_scriptargs_browse.setEnabled(false);
+        jButton_scriptargs_browse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_scriptargs_browseActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jTextField_scriptargs))
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox_scriptargsfile)
+                                    .addComponent(jCheckBox_scriptargs))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(jTextField_scriptargsfile)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_scriptargs_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBox_scriptargs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField_scriptargs, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox_scriptargsfile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_scriptargsfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_scriptargs_browse))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Debugging Options"));
+
+        jCheckBox_ptrace.setText("Packet Trace");
+
+        jCheckBox_verbose.setText("Verbose Mode");
+
+        jCheckBox_debug.setSelected(true);
+        jCheckBox_debug.setText("Debug");
+        jCheckBox_debug.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_debugActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(jCheckBox_ptrace, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox_verbose, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox_debug, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(117, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox_verbose)
+                    .addComponent(jCheckBox_ptrace)
+                    .addComponent(jCheckBox_debug))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jButton_CancelOptions.setText("Cancel");
+        jButton_CancelOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_CancelOptionsActionPerformed(evt);
+            }
+        });
 
         jButton_ApplyOptions.setText("Apply");
         jButton_ApplyOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -758,12 +842,38 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
 
-        jButton_CancelOptions.setText("Cancel");
-        jButton_CancelOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_CancelOptionsActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton_ApplyOptions)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_CancelOptions)))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_CancelOptions)
+                    .addComponent(jButton_ApplyOptions))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jFrame_ScanOptionsLayout = new javax.swing.GroupLayout(jFrame_ScanOptions.getContentPane());
         jFrame_ScanOptions.getContentPane().setLayout(jFrame_ScanOptionsLayout);
@@ -773,22 +883,12 @@ public class MainPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jFrame_ScanOptionsLayout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addComponent(jButton_ApplyOptions)
-                .addGap(18, 18, 18)
-                .addComponent(jButton_CancelOptions)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jFrame_ScanOptionsLayout.setVerticalGroup(
             jFrame_ScanOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jFrame_ScanOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jFrame_ScanOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_ApplyOptions)
-                    .addComponent(jButton_CancelOptions))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -810,62 +910,57 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jPopupMenu1.add(jMenuItem_closeAll);
 
-        jFrame_About.setTitle("About Halcyon");
-        jFrame_About.setAlwaysOnTop(true);
-        jFrame_About.setMinimumSize(new java.awt.Dimension(460, 425));
-        jFrame_About.setResizable(false);
-
-        java.awt.GridBagLayout jPanel11Layout = new java.awt.GridBagLayout();
-        jPanel11Layout.columnWidths = new int[] {0};
-        jPanel11Layout.rowHeights = new int[] {0, 7, 0, 7, 0};
-        jPanel11.setLayout(jPanel11Layout);
+        jDialog_About.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog_About.setTitle("About");
+        jDialog_About.setAlwaysOnTop(true);
+        jDialog_About.setResizable(false);
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/halcyon.png"))); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 122, 0, 122);
-        jPanel11.add(jLabel12, gridBagConstraints);
 
-        jLabel13.setText("<html> <center><p>Halcyon is the first unofficial IDE specifically focused on Nmap Script (NSE) Development. This idea of this research development was originated while writing custom Nmap Scripts repeatedly for during different enterprise penetration testing scenarios. Halcyon is free to use, java based application that can run on any operating system and also provides a wide list of features such as code intelligence, code builder, auto-completion, debugging and error correction options and also a bunch of other features like other development IDE(s) has. Halcyon was, is and will be a community project to give better development interface/environment to researchers and thus enhance the number of NSE writers in the information security community.\n<br>\nLicense: GNU General Public License v3.0 http://www.gnu.org/licenses/\n\n</p><br><br>\n<p>\nMore details : <a href=”http://halcyon-ide.org/”> halcyon-ide.org </a>\n</p>\n<center>\n</html>\n\n  \n");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel11.add(jLabel13, gridBagConstraints);
+        jLabel_About.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        jLabel_About.setText("<html> <body> <p> <h3>Halcyon IDE</h3> Version: 2.0.1 (codename: Aeolus) <br> Build id: 20180101-1200<br> </p> <p align=\"justify\"> (c) Copyright MIT License. https://halcyon-ide.org <br> This product includes software developed by other open source projects including modified BSD license.  </p> <br><br>  </p> </body></html>");
+        jLabel_About.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jButton_aboutCLOSE.setText("CLOSE");
-        jButton_aboutCLOSE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_aboutCLOSEActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel11.add(jButton_aboutCLOSE, gridBagConstraints);
-
-        javax.swing.GroupLayout jFrame_AboutLayout = new javax.swing.GroupLayout(jFrame_About.getContentPane());
-        jFrame_About.getContentPane().setLayout(jFrame_AboutLayout);
-        jFrame_AboutLayout.setHorizontalGroup(
-            jFrame_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_AboutLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel_About, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-        jFrame_AboutLayout.setVerticalGroup(
-            jFrame_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_AboutLayout.createSequentialGroup()
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel_About, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jDialog_AboutLayout = new javax.swing.GroupLayout(jDialog_About.getContentPane());
+        jDialog_About.getContentPane().setLayout(jDialog_AboutLayout);
+        jDialog_AboutLayout.setHorizontalGroup(
+            jDialog_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_AboutLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jDialog_AboutLayout.setVerticalGroup(
+            jDialog_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_AboutLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Halcyon IDE 2.0 - IDE for Nmap Script Development");
+        setTitle("Halcyon IDE 2.0.1");
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -1137,7 +1232,6 @@ public class MainPanel extends javax.swing.JFrame {
 
         jPanel_status.setMaximumSize(new java.awt.Dimension(32767, 50));
         jPanel_status.setPreferredSize(new java.awt.Dimension(575, 100));
-        jPanel_status.setSize(new java.awt.Dimension(0, 250));
         jPanel_status.setLayout(new javax.swing.BoxLayout(jPanel_status, javax.swing.BoxLayout.LINE_AXIS));
 
         jTextArea_output.setEditable(false);
@@ -1586,7 +1680,7 @@ public class MainPanel extends javax.swing.JFrame {
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        getAccessibleContext().setAccessibleDescription("Unofficial IDE for Nmap Script Development");
+        getAccessibleContext().setAccessibleDescription("IDE for Nmap Script Developers");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1653,29 +1747,29 @@ public class MainPanel extends javax.swing.JFrame {
                     jTextField_LIBPATH.setText(lib);
                     jButton_applyConfig.setEnabled(true);
                 }else{
-                   showMsg(jFrame_Configure,"Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+                   JOptionPane.showConfirmDialog(jFrame_Configure,"Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
                 } 
             }else{
-                showMsg(jFrame_Configure,"Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+                JOptionPane.showConfirmDialog(jFrame_Configure,"Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
             }
          
         }catch(NullPointerException e){
             String error = "<html>Unable to find the nmap location.<br>Please configure it manually.</html>";
-            int done = showMsg(jFrame_Configure,error, "Error !!",JOptionPane.OK_OPTION);
+            int done = JOptionPane.showConfirmDialog(jFrame_Configure,error, "Error !!",JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_jButton_autoconfigActionPerformed
 
     private void jButton_settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_settingsActionPerformed
         // TODO add your handling code here:
         jFrame_Configure.pack();
-        jFrame_NewProject.setLocationRelativeTo(null);
+        jFrame_Configure.setLocationRelativeTo(null);
         jFrame_Configure.setVisible(true);
     }//GEN-LAST:event_jButton_settingsActionPerformed
 
     private void jButton_cancelConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cancelConfigActionPerformed
         // TODO add your handling code here:
         if(jTextField_NPATH.getText().isEmpty() || jTextField_NSEPATH.getText().isEmpty()||jTextField_LIBPATH.getText().isEmpty()){
-            int x = showMsg(jFrame_Configure,"Halcyon wont work as desired without proper configuration. You might encouters errors", "Error!", JOptionPane.OK_OPTION);
+            int x = JOptionPane.showConfirmDialog(jFrame_Configure,"Halcyon wont work as desired without proper configuration. You might encouters errors", "Error!", JOptionPane.OK_OPTION);
             if(x==JOptionPane.OK_OPTION){
                 jFrame_Configure.setVisible(false);
             }
@@ -1701,6 +1795,10 @@ public class MainPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
         setProperties(jTextField_NPATH.getText(),jTextField_NSEPATH.getText(),jTextField_LIBPATH.getText());
         jFrame_Configure.setVisible(false);
+        int x = JOptionPane.showConfirmDialog(null,"You may need to restart the IDE to apply the changed settings", "Settings", JOptionPane.OK_OPTION);
+        if(x==JOptionPane.OK_OPTION){
+            System.exit(0);
+        }
     }//GEN-LAST:event_jButton_applyConfigActionPerformed
 
     private void jButton_clearconfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_clearconfigActionPerformed
@@ -1713,13 +1811,18 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jMenuItem_configureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_configureActionPerformed
         // TODO add your handling code here:
+        jFrame_Configure.pack();
+        jFrame_Configure.setLocationRelativeTo(null);
         jFrame_Configure.setVisible(true);
     }//GEN-LAST:event_jMenuItem_configureActionPerformed
 
     private void jFrame_ConfigureWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jFrame_ConfigureWindowOpened
         // TODO add your handling code here:
-        //load halcyon.settings
-        loadSettings();
+        File conf = new File(userhome+""+File.separator+"halcyon.settings");
+        if(conf.exists()){
+            loadSettings();
+        }
+        
     }//GEN-LAST:event_jFrame_ConfigureWindowOpened
 
     private void jButton_newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_newActionPerformed
@@ -1747,7 +1850,8 @@ public class MainPanel extends javax.swing.JFrame {
     private void jButton_NewNSEBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewNSEBrowseActionPerformed
         // TODO add your handling code here:
         try{
-            jFileChooser1.setCurrentDirectory(new java.io.File("/"));
+            Properties prop = new Properties();
+            jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home", ".")));  
             jFileChooser1.setDialogTitle("Save Script As");
             jFileChooser1.setMultiSelectionEnabled(false);
             int option = jFileChooser1.showSaveDialog(jFrame_NewProject);
@@ -1758,7 +1862,8 @@ public class MainPanel extends javax.swing.JFrame {
                 jTextField_NewNSEName.setText(file.getAbsolutePath());
             }
         }catch(Exception e){
-            showMsg(jFrame_NewProject,"Can not save the file. Please check the file permission and try again.", "Cannot save file", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(jFrame_NewProject,"Halcyon IDE do not have permission to create file. Try executing from different path", "Permission Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
+            
         }
     }//GEN-LAST:event_jButton_NewNSEBrowseActionPerformed
 
@@ -1893,11 +1998,16 @@ public class MainPanel extends javax.swing.JFrame {
     private void jCheckBox_scriptargsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_scriptargsActionPerformed
         // TODO add your handling code here:
         if(jCheckBox_scriptargs.isSelected()){
+            jCheckBox_scriptargsfile.setSelected(false);
+            jButton_scriptargs_browse.setEnabled(false);
+            jTextField_scriptargsfile.setText(""); 
+            jTextField_scriptargsfile.setEnabled(false); 
+            jTextField_scriptargsfile.setEditable(false);
+            jTextField_scriptargs.setEnabled(true); 
             jTextField_scriptargs.setEditable(true);
-            jTextField_scriptargs.setEnabled(true);
         }else{
+            jTextField_scriptargs.setEnabled(false); 
             jTextField_scriptargs.setEditable(false);
-            jTextField_scriptargs.setEnabled(false);
         }
     }//GEN-LAST:event_jCheckBox_scriptargsActionPerformed
 
@@ -1918,8 +2028,7 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jButton_ApplyOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ApplyOptionsActionPerformed
         // TODO add your handling code here:
-        setOptions();
-        
+        setOptions(); 
     }//GEN-LAST:event_jButton_ApplyOptionsActionPerformed
 
     private void jButton_scanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_scanActionPerformed
@@ -2094,7 +2203,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSEMouseClicked
 
@@ -2107,7 +2216,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSEDATAMouseClicked
 
@@ -2120,7 +2229,7 @@ public class MainPanel extends javax.swing.JFrame {
                 openTreeNode(f);
             }
         } catch (Exception e) {
-            showMsg(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"Error in opening file. Try again with valid file", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_jTree_NSELIBMouseClicked
 
@@ -2153,21 +2262,13 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jMenuItem_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_aboutActionPerformed
         // TODO add your handling code here:
-        jFrame_About.pack();
-        jFrame_About.setLocationRelativeTo(null);
-        jFrame_About.setVisible(true);
+        showAbout(); 
+        
     }//GEN-LAST:event_jMenuItem_aboutActionPerformed
-
-    private void jButton_aboutCLOSEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_aboutCLOSEActionPerformed
-        // TODO add your handling code here:
-        jFrame_About.setVisible(false);
-    }//GEN-LAST:event_jButton_aboutCLOSEActionPerformed
 
     private void jButton_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_aboutActionPerformed
         // TODO add your handling code here:
-        jFrame_About.pack();
-        jFrame_About.setLocationRelativeTo(null);
-        jFrame_About.setVisible(true);
+        showAbout();
     }//GEN-LAST:event_jButton_aboutActionPerformed
 
     private void jButton_editNSEPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_editNSEPathActionPerformed
@@ -2263,6 +2364,42 @@ public class MainPanel extends javax.swing.JFrame {
         updateScriptDB();
     }//GEN-LAST:event_jMenuItem_updateScriptDBActionPerformed
 
+    private void jButton_scriptargs_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_scriptargs_browseActionPerformed
+        // TODO add your handling code here:
+        try{
+            Properties prop = new Properties();
+            jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home", ".")));  
+            jFileChooser1.setDialogTitle("Select Script Argument File");
+            jFileChooser1.setMultiSelectionEnabled(false);
+            int option = jFileChooser1.showOpenDialog(jFrame_ScanOptions);
+            if(option == jFileChooser1.APPROVE_OPTION){
+                File file = new File(jFileChooser1.getSelectedFile().getAbsolutePath()); 
+                jTextField_scriptargsfile.setText(file.getAbsolutePath());
+            }
+        }catch(Exception e){
+            JOptionPane.showConfirmDialog(jFrame_ScanOptions,"Script argument file could not load. Please try again.", "Settings Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
+            
+        }
+        
+    }//GEN-LAST:event_jButton_scriptargs_browseActionPerformed
+
+    private void jCheckBox_scriptargsfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_scriptargsfileActionPerformed
+        // TODO add your handling code here:
+        if(jCheckBox_scriptargsfile.isSelected()){
+            jCheckBox_scriptargs.setSelected(false); 
+            jTextField_scriptargs.setText("");
+            jTextField_scriptargs.setEnabled(false);
+            jTextField_scriptargs.setEditable(false);
+            jTextField_scriptargsfile.setEnabled(true);
+            jTextField_scriptargsfile.setEditable(true);
+            jButton_scriptargs_browse.setEnabled(true); 
+        }else{
+            jTextField_scriptargsfile.setEnabled(false);
+            jTextField_scriptargsfile.setEditable(false);
+            jButton_scriptargs_browse.setEnabled(false); 
+        } 
+    }//GEN-LAST:event_jCheckBox_scriptargsfileActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2307,7 +2444,6 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton_NewCreate;
     private javax.swing.JButton jButton_NewNSEBrowse;
     private javax.swing.JButton jButton_about;
-    private javax.swing.JButton jButton_aboutCLOSE;
     private javax.swing.JButton jButton_applyConfig;
     private javax.swing.JButton jButton_autoconfig;
     private javax.swing.JButton jButton_cancelConfig;
@@ -2325,6 +2461,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton_print;
     private javax.swing.JButton jButton_save;
     private javax.swing.JButton jButton_scan;
+    private javax.swing.JButton jButton_scriptargs_browse;
     private javax.swing.JButton jButton_settings;
     private javax.swing.JButton jButton_stop;
     private javax.swing.JButton jButton_undo;
@@ -2333,17 +2470,17 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox_ptrace;
     private javax.swing.JCheckBox jCheckBox_regex;
     private javax.swing.JCheckBox jCheckBox_scriptargs;
+    private javax.swing.JCheckBox jCheckBox_scriptargsfile;
     private javax.swing.JCheckBox jCheckBox_verbose;
     private javax.swing.JComboBox jComboBox_NewNSEService;
+    private javax.swing.JDialog jDialog_About;
     private javax.swing.JFileChooser jFileChooser1;
-    private javax.swing.JFrame jFrame_About;
     private javax.swing.JFrame jFrame_Configure;
     private javax.swing.JFrame jFrame_NewProject;
     private javax.swing.JFrame jFrame_ScanOptions;
     private javax.swing.JFrame jFrame_searchBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2352,6 +2489,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel_About;
     private javax.swing.JLabel jLabel_Status;
     private javax.swing.JList jList_NewNSECateg;
     private javax.swing.JMenu jMenu1;
@@ -2414,12 +2552,15 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu_Proj;
     private javax.swing.JMenu jMenu_codegen;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanel_status;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBar_status;
@@ -2453,6 +2594,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField_host;
     private javax.swing.JTextField jTextField_port;
     private javax.swing.JTextField jTextField_scriptargs;
+    private javax.swing.JTextField jTextField_scriptargsfile;
     private javax.swing.JTextField jTextField_searchItem;
     private javax.swing.JToggleButton jToggleButton_options;
     private javax.swing.JToolBar jToolBar1;
@@ -2470,6 +2612,10 @@ public class MainPanel extends javax.swing.JFrame {
     CommandExecutionHandler cmdHandler;
     private Task task;
     private UpdateDB updateDB;
+    String userhome = null;
+    
+    URL url = getClass().getResource("/halcyon/icons/halcyon-logo.png"); 
+    ImageIcon icon = new ImageIcon(url);
     
     // user defined functions
     private void setIcon() {
@@ -2478,13 +2624,16 @@ public class MainPanel extends javax.swing.JFrame {
     }
 
     private void Configure() {
-        File conf = new File("halcyon.settings");
+        Properties properties = System.getProperties(); 
+        userhome = properties.getProperty("user.home");
+        
+        File conf = new File(userhome+""+File.separator+"halcyon.settings");
         if (conf.exists()) { 
             //Setup the main panel
             Properties prop = new Properties();
             InputStream in = null;
             try {
-                in = new FileInputStream("halcyon.settings");
+                in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
                 prop.load(in);
                 jTree_NSE.setModel(new FileSystemModel(new File(prop.getProperty("NSEPATH"))));
                 jTree_NSEDATA.setModel(new FileSystemModel(new File((prop.getProperty("LIBPATH")+"data"))));
@@ -2496,7 +2645,7 @@ public class MainPanel extends javax.swing.JFrame {
             String msg = "<html>Classpath is not configured. Halcyon will not work as desired without this configuration. <br>Click Yes to configure now or No to quit.</html>";
             String title = "Configuration Missing";
             
-             int configCheck = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+             int configCheck = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION);
              if(configCheck == JOptionPane.YES_OPTION){
                  configNow();
              }else if(configCheck == JOptionPane.NO_OPTION){
@@ -2507,25 +2656,17 @@ public class MainPanel extends javax.swing.JFrame {
         }
     }
     
-    private int showMsg(Component comp,String msg, String title, int jOption){
-        //String msg = "<html>Classpath is not configured. Halcyon will not work as desired without this configuration. <br>Click OK to configure now.</html>";
-        //String title = "Configuration Missing";
+    /*private int showMsg(Component comp,String msg, String title, int jOption){
             
              int done = JOptionPane.showConfirmDialog(comp, msg, title, jOption, JOptionPane.WARNING_MESSAGE);
              
              return done;
-             /*
-             if(done == JOptionPane.YES_OPTION){
-                 
-             }else if(done == JOptionPane.NO_OPTION){
-                 System.exit(0);
-             }else{
-                 System.exit(0);
-             }
-             */
-    }
+    }*/
     
     private void configNow(){
+        jFrame_Configure.setIconImage(icon.getImage());
+        //jFrame_Configure.pack();
+        jFrame_Configure.setLocationRelativeTo(null);
         jFrame_Configure.setVisible(true);
     }
     
@@ -2533,28 +2674,29 @@ public class MainPanel extends javax.swing.JFrame {
         Properties prop = new Properties();
         OutputStream out = null;
         try {
-            out = new FileOutputStream("halcyon.settings");
-            prop.setProperty("Halcyon Version", "2.0");
+            out = new FileOutputStream(userhome+""+File.separator+"halcyon.settings");
+            prop.setProperty("Halcyon Version", "2.0.1");
             prop.setProperty("NPATH", npath);
             prop.setProperty("NSEPATH", nse);
             prop.setProperty("LIBPATH", lib);
             prop.store(out, null);
         } catch (Exception e) {
-            showMsg(jFrame_Configure,"Error in configuration. Please try again", "Configuration Error!",JOptionPane.OK_OPTION);
+            JOptionPane.showConfirmDialog (jFrame_Configure,"Error in configuration. Please try again", "Configuration Error!",JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, icon);
         }
     }
     
     private void loadSettings(){
         Properties prop = new Properties();
         InputStream in = null;
+        //File conf = new File(userhome+""+File.separator+"halcyon.settings");
         try {
-            in = new FileInputStream("halcyon.settings");
+            in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
             prop.load(in);
             jTextField_NPATH.setText(prop.getProperty("NPATH"));
             jTextField_NSEPATH.setText(prop.getProperty("NSEPATH"));
             jTextField_LIBPATH.setText(prop.getProperty("LIBPATH"));
         } catch (Exception e) {
-            showMsg(null,"Error in configuration. Please configure correctly and restart Halcyon.", "Configuration Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"Error in configuration. Please configure correctly and restart Halcyon.", "Configuration Error", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -2578,7 +2720,7 @@ public class MainPanel extends javax.swing.JFrame {
             codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
         }catch(Exception e){
-            showMsg(jFrame_NewProject,"Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
+            JOptionPane.showConfirmDialog(jFrame_NewProject,"Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
         }
             
     }
@@ -2648,7 +2790,8 @@ public class MainPanel extends javax.swing.JFrame {
         
         
         try{
-            jFileChooser1.setCurrentDirectory(new java.io.File("/"));
+            Properties prop = System.getProperties();  
+            jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home")));
             jFileChooser1.setDialogTitle("Open Script");
             jFileChooser1.setMultiSelectionEnabled(false);
             
@@ -2667,7 +2810,7 @@ public class MainPanel extends javax.swing.JFrame {
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
             
         }catch(Exception e){
-            showMsg(null,"Wrong File Selected", "Error!",JOptionPane.OK_OPTION);
+            JOptionPane.showConfirmDialog(null,"Wrong File Selected", "Error!", JOptionPane.DEFAULT_OPTION);
         }
         
        
@@ -2698,11 +2841,11 @@ public class MainPanel extends javax.swing.JFrame {
                 jLabel_Status.setText(jLabel_Status.getText().replace("Unsaved: ", ""));
                 
             }catch(Exception e){
-                showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
+                JOptionPane.showConfirmDialog(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
 
             }
         }catch(Exception e){
-            showMsg(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
+            JOptionPane.showConfirmDialog(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
 
         }
     }
@@ -2721,7 +2864,8 @@ public class MainPanel extends javax.swing.JFrame {
             File scriptFile = null;
 
             try{
-                jFileChooser1.setCurrentDirectory(new java.io.File("/"));
+                Properties prop = System.getProperties();  
+                jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home"))); 
                 jFileChooser1.setDialogTitle("Save Script");
 
                 jFileChooser1.setMultiSelectionEnabled(false);
@@ -2745,11 +2889,11 @@ public class MainPanel extends javax.swing.JFrame {
                 jLabel_Status.setText(jLabel_Status.getText().replace("Unsaved: ", ""));
                 
             }catch(Exception e){
-                showMsg(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.OK_OPTION);
+                JOptionPane.showConfirmDialog(null,"Limited File Permission on the selected directory.","Permission Denied",JOptionPane.DEFAULT_OPTION);
 
             }
         }catch(Exception e){
-            showMsg(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.OK_OPTION);
+            JOptionPane.showConfirmDialog(null,"No acive script found.\nPlease create a new script and try again","Error",JOptionPane.DEFAULT_OPTION);
 
         }
     }
@@ -2760,12 +2904,12 @@ public class MainPanel extends javax.swing.JFrame {
             JTextArea area = (JTextArea)scroll.getViewport().getView();
             boolean done = area.print();
             if(done){
-                showMsg(null,"Printing Finished", "Information",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showConfirmDialog(null,"Printing Finished", "Information",JOptionPane.INFORMATION_MESSAGE);
             }else{
-                showMsg(null, "Printing in Progress.", "Print",JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showConfirmDialog(null, "Printing in Progress.", "Print",JOptionPane.PLAIN_MESSAGE);
             } 
         } catch (Exception e) {
-            showMsg(null, "Printing Failed. Try again.", "Print Script",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Printing Failed. Try again.", "Print Script",JOptionPane.PLAIN_MESSAGE);
         }
     }
     
@@ -2792,9 +2936,8 @@ public class MainPanel extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Text not found");
                 }
             }else{
-                showMsg(jFrame_searchBox,"Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.OK_OPTION);
-            }
-            
+                JOptionPane.showConfirmDialog(jFrame_searchBox,"Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+            } 
         } catch (Exception e) {
         }
     }
@@ -2806,15 +2949,26 @@ public class MainPanel extends javax.swing.JFrame {
     }
 
     private void setOptions() {
+        
+        
         if(jCheckBox_scriptargs.isSelected() && jTextField_scriptargs.getText().isEmpty()){
-            showMsg(jFrame_Configure,"Script Argument is empty", "Warning", JOptionPane.PLAIN_MESSAGE); 
-        }else{ 
-            hb.setScriptArgs(jTextField_scriptargs.getText(), jCheckBox_scriptargs.isSelected());
+            JOptionPane.showConfirmDialog(jFrame_Configure,"Script Argument is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
+        }else if(jCheckBox_scriptargsfile.isSelected() && jTextField_scriptargsfile.getText().isEmpty()){
+            JOptionPane.showConfirmDialog(jFrame_Configure,"Script Argument File is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }else{  
+            if(jCheckBox_scriptargs.isSelected()){
+                hb.setScriptArgs(jTextField_scriptargs.getText(), jCheckBox_scriptargs.isSelected());
+            }
+            if(jCheckBox_scriptargsfile.isSelected()){
+                hb.setScriptArgsFile(jTextField_scriptargsfile.getText(), jCheckBox_scriptargsfile.isSelected());
+            }
             hb.setDebug(jCheckBox_debug.isSelected());
             hb.setPtrace(jCheckBox_ptrace.isSelected());
             hb.setVerbose(jCheckBox_verbose.isSelected());
             if(jRadioButton_scanUDP.isSelected()){
                 hb.setScanType("UDP Scan");
+            }else{
+                hb.setScanType("TCP Scan");
             } 
             jFrame_ScanOptions.setVisible(false);
         } 
@@ -2828,7 +2982,7 @@ public class MainPanel extends javax.swing.JFrame {
             int pos = area.getCaretPosition();
             area.insert(code, pos);
         }catch(Exception e){
-            showMsg(null,"Can not generate code. Try Again", "Code Generation Failed.", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"Can not generate code. Try Again", "Code Generation Failed.", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -2882,7 +3036,7 @@ public class MainPanel extends javax.swing.JFrame {
                 } 
             }
         }else{
-            showMsg(null,"No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null,"No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -2901,7 +3055,7 @@ public class MainPanel extends javax.swing.JFrame {
             File f = new File(scriptName);
             String fname = f.getName();
             Properties prop = new Properties(); 
-            InputStream in = new FileInputStream("halcyon.settings");
+            InputStream in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
             prop.load(in);
             String expScriptName = prop.getProperty("NSEPATH")+""+fname;
             jTextArea_output.setText("Exportig "+scriptName+" to Nmap Script path "+expScriptName+"\r\n");
@@ -2926,7 +3080,7 @@ public class MainPanel extends javax.swing.JFrame {
             updateScriptDB();
             
         } catch (Exception e) {
-            showMsg(null, "Export Failed. Check the file permissions of nmap script path.", "Export Failed", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Export Failed. Check the file permissions of nmap script path.", "Export Failed", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -2936,6 +3090,50 @@ public class MainPanel extends javax.swing.JFrame {
             updateDB.execute();
         } catch (Exception e) {
         }
+    }
+
+    private void showAbout() {
+        String jrv, jvn, jvv, jrn, on, ov, oa, sje, ulc, udir;
+        jrv = jvn = jvv = jrn = on = ov = oa = sje = ulc = udir = null;
+        Properties properties = System.getProperties(); 
+        jrv = properties.getProperty("java.runtime.version");
+        jvn = properties.getProperty("java.vm.name");
+        jvv = properties.getProperty("java.vm.version");
+        jrn = properties.getProperty("java.runtime.name");
+        on = properties.getProperty("os.name");
+        ov = properties.getProperty("os.version");
+        oa = properties.getProperty("os.arch");
+        sje = properties.getProperty("sun.jnu.encoding");
+        ulc = properties.getProperty("user.language_user.country"); 
+        File conf = new File(userhome+""+File.separator+"halcyon.settings");
+        if (conf.exists()) {
+            udir = conf.getParent();
+        }else{
+            udir = "";
+        }  
+        String about = "<html>" +
+                    "<body>" +
+                    "<p>" +
+                    "<h3>Halcyon IDE</h3>" +
+                    "Version: 2.0.1 (codename: Aeolus) <br>" +
+                    "Build id: 20180101-1200<br>" +
+                    "</p>" +
+                    "<p align=\"justify\">" +
+                    "(c) Copyright MIT License. https://halcyon-ide.org <br>" +
+                    "This product includes software developed by other open source projects including modified BSD license. " +
+                    "</p> <br><br>" +
+                    "<p align=\"justify\">" +
+                    "Product Version: Halcyon IDE 2.0.1 (Build 20180101-1200) <br>" +
+                    "Java: " + jrv+"; "+jvn+"; "+jvv+" <br>"+
+                    "Runtime: " + jrn+"; "+jrv+" <br>" +
+                    "System: "+on+" "+ov+" running on "+oa+"; "+sje+"; "+ulc+"<br>" +
+                    "User directory: "+ udir +"<br>" + 
+                    "</p>" +
+                    "</body></html>";
+        jLabel_About.setText(about);
+        jDialog_About.pack();
+        jDialog_About.setLocationRelativeTo(null);
+        jDialog_About.setVisible(true);
     }
  
 
@@ -2951,7 +3149,7 @@ public class MainPanel extends javax.swing.JFrame {
         InputStream in;
         java.util.List<String> cmd = new ArrayList<String>(); 
         
-        if(jLabel_Status.getText().contains("Unsaved: ")){
+        if(jLabel_Status.getText().contains("File not saved: ")){
             saveScript(); 
         }
         try {
@@ -2964,7 +3162,7 @@ public class MainPanel extends javax.swing.JFrame {
                     jTextArea_output.setText("");
                     
                     //get the classpath and binaries
-                    in = new FileInputStream("halcyon.settings");
+                    in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
                     prop.load(in);
                     nmap = prop.getProperty("NPATH");
                     
@@ -2977,6 +3175,11 @@ public class MainPanel extends javax.swing.JFrame {
                        
                         cmd.add("--script-args=\""+hb.getScriptArgs().trim()+"\"");
                     }
+                    
+                    if(hb.isScriptArgsFile()){
+                         cmd.add("--script-args-file=\""+hb.getScriptArgsFile().trim()+"\"");
+                    }
+                     
                     
                     if(hb.getScanType().equals("UDP Scan")){
                         cmd.add("-sU"); 
@@ -2995,18 +3198,17 @@ public class MainPanel extends javax.swing.JFrame {
                     if(hb.getDebug()){
                         cmd.add("-d");
                     }
-                    System.out.println(cmd);
-                    jTextArea_output.setText("========== Execution Started =========\r\n");
+                     jTextArea_output.setText("========== Execution Started =========\r\n");
                     cmdHandler = new CommandExecutionHandler(cmd);
                     jTextArea_output.setText(jTextArea_output.getText()+"\r\n"+cmdHandler.executeCommand());
                     jTextArea_output.setText(jTextArea_output.getText()+"========== Execution Finished =========\r\n");
                     
                 }else{
-                    showMsg(null,"Invalid host or port", "Warning", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showConfirmDialog(null,"Invalid host or port", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 
             } catch (Exception e) {
-                showMsg(null,"Script failed to execute. This could be due to halcyon misconfiguration. Try again after configuring it properly.", "Script Failed", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showConfirmDialog(null,"Script failed to execute. This could be due to halcyon misconfiguration. Try again after configuring it properly.", "Script Failed", JOptionPane.PLAIN_MESSAGE);
                 
             }
       return null;
@@ -3037,7 +3239,7 @@ public class MainPanel extends javax.swing.JFrame {
         jTextArea_output.setText(jTextArea_output.getText()+"\r\n========== Updating Script DB =========\r\n");
  
         try { 
-            in = new FileInputStream("halcyon.settings");
+            in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
             prop.load(in);
             nmap = prop.getProperty("NPATH");
                     
@@ -3049,7 +3251,7 @@ public class MainPanel extends javax.swing.JFrame {
             jTextArea_output.setText(jTextArea_output.getText()+"========== Script DB Updated =========\r\n");
                 
             } catch (Exception e) {
-                showMsg(null,"Failed to update script database.", "Script DB Update Failed", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showConfirmDialog(null,"Failed to update script database.", "Script DB Update Failed", JOptionPane.PLAIN_MESSAGE);
             }
       return null;
     }
@@ -3104,26 +3306,7 @@ public class MainPanel extends javax.swing.JFrame {
 		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-        
-        /*
-        
-        ^		#start of the line
-        (		#  start of group #1
-        [01]?\\d\\d?    #    Can be one or two digits. If three digits appear, it must start either 0 or 1
-                	#    e.g ([0-9], [0-9][0-9],[0-1][0-9][0-9])
-        |		#    ...or
-        2[0-4]\\d	#    start with 2, follow by 0-4 and end with any digit (2[0-4][0-9]) 
-        |               #    ...or
-        25[0-5]         #    start with 2, follow by 5 and ends with 0-5 (25[0-5]) 
-        )		#  end of group #2
-        \.              #  follow by a dot "."
-        ....            # repeat with 3 times (3x)
-        $		#end of the line
-        
-        
-        */
-        
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";  
         
         //if (ip == null || ip.isEmpty()) return false;
         ip = ip.trim();
@@ -3222,11 +3405,11 @@ class MyDocumentListener implements DocumentListener{
     
     public void insertUpdate(DocumentEvent de){
         
-        if(!status.getText().contains("Unsaved:")){
+        if(!status.getText().contains("File not saved:")){
             status.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
             status.setForeground(new java.awt.Color(255, 11, 21));
 
-            status.setText("Unsaved: "+status.getText());
+            status.setText("File not saved: "+status.getText());
         }
        
     }

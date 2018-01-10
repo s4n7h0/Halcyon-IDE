@@ -17,9 +17,10 @@ public class HalcyonBean implements Serializable{
     
     public static final String PROP_SAMPLE_PROPERTY = "ScanProperty";
     
-    private String scriptPath, scriptName, scriptArgs, scanType = "TCP Scan";
+    private String scriptPath, scriptName, scriptArgs, scriptArgsFile, scanType = "TCP Scan";
     File f;
     boolean isArgs = false;
+    boolean isArgsFile = false;
     boolean isVerbose = false;
     boolean isDebug = true;
     boolean isPtrace = false;
@@ -36,12 +37,25 @@ public class HalcyonBean implements Serializable{
         scriptArgs = arg;
     }
     
+    public void setScriptArgsFile(String arg, boolean val){
+        isArgsFile = val;
+        scriptArgsFile = arg;
+    } 
+    
     public boolean isScriptArg(){
         return isArgs;
     }
     
     public String getScriptArgs(){
         return scriptArgs;
+    }
+    
+    public String getScriptArgsFile(){
+        return scriptArgsFile;
+    }
+    
+    public boolean isScriptArgsFile(){
+        return isArgsFile;
     }
     
     public void setVerbose(boolean val){
