@@ -1,7 +1,7 @@
 
 # Halcyon IDE 
 
-[![Arsenal (USA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/06/the-black-hat-arsenal-usa-2016-remarkable-line-up/)  [![Arsenal (ASIA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/03/black-hat-arsenal-asia-2016-speakers-line-up/)  [![Arsenal (USA)](https://raw.githubusercontent.com/toolswatch/badges/master/arsenal/usa/2018.svg)](http://www.toolswatch.org/2018/05/black-hat-arsenal-usa-2018-the-w0w-lineup/)
+[![Arsenal (USA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/06/the-black-hat-arsenal-usa-2016-remarkable-line-up/)  [![Arsenal (ASIA)](https://www.toolswatch.org/badges/arsenal/2016.svg)](http://www.toolswatch.org/2016/03/black-hat-arsenal-asia-2016-speakers-line-up/)
 
 [![8th](https://www.toolswatch.org/badges/toptools/2016.svg)](https://www.toolswatch.org/2017/02/2016-top-security-tools-as-voted-by-toolswatch-org-readers)
 
