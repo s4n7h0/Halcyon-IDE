@@ -8,7 +8,7 @@ Halcyon is the first IDE specifically focused on Nmap Script (NSE) Development. 
 
 Halcyon IDE can understand Nmap library as well as traditional LUA syntax. Possible repetitive codes such as web crawling, bruteforcing etc., is pre-built in the IDE and this makes easy for script writers to save their time while developing majority of test scenarios.
 
-![Screenshot of Halcyon IDE](Halcyon IDE.png) 
+![Screenshot of Halcyon IDE](https://raw.githubusercontent.com/s4n7h0/Halcyon-IDE/master/Halcyon IDE.png) 
 
 More documentation and presentation can be available on the official website http://halcyon-ide.org/
 
