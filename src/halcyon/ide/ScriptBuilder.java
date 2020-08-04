@@ -78,7 +78,7 @@ public class ScriptBuilder {
     
     public String getPortrule(){
         String rule = null;
-       if(scriptService.equals("default")){
+       if(scriptService.equals("Default Port Rule")){
             rule = "portrule = function( host, port )\n"+
                     "\treturn true\n"+
                     "end\n";

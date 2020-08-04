@@ -5,6 +5,8 @@
  */
 package halcyon.ide;
 
+import java.io.File; 
+
 /**
  *
  * @author s4n7h0
@@ -15,9 +17,15 @@ public class HalcyonIDE {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        MainPanel mp = new MainPanel();
+        // load configuration 
+        ConfigurationManager cm = new ConfigurationManager();
+        cm.init(); 
+        //cm.LoadConfiguration();  
+        // load panel
+        MainPanel mp = new MainPanel(cm);
         mp.setVisible(true);
     }
+
+   
     
 }

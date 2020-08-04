@@ -25,11 +25,36 @@ public class HalcyonBean implements Serializable{
     boolean isDebug = true;
     boolean isPtrace = false;
     boolean isOption = false;
+    String nmap, nscript, nlib = "";
     
     private PropertyChangeSupport propertySupport;
     
     public HalcyonBean() {
         propertySupport = new PropertyChangeSupport(this);
+    }
+    
+    public void setNmap(String arg){
+        nmap = arg;
+    }
+    
+    public String getNmap(){
+        return nmap;
+    }
+    
+    public void setNscript(String arg){
+        nscript = arg;
+    }
+    
+    public String getNscript(){
+        return nscript;
+    }
+    
+    public void setNlib(String arg){
+        nlib = arg;
+    }
+    
+    public String getNlib(){
+        return nlib;
     }
     
     public void setScriptArgs(String arg, boolean val){

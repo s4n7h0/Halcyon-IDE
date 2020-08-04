@@ -8,17 +8,20 @@ package halcyon.ide;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 import javax.swing.undo.UndoManager;
 import org.fife.ui.autocomplete.*;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.*;
+ 
 
 /**
  *
@@ -29,19 +32,24 @@ public class MainPanel extends javax.swing.JFrame {
     /**
      * Creates new form MainPanel
      */
-    public MainPanel() {
-        try {
-            UIManager.setLookAndFeel(
-                    "javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (ClassNotFoundException ex) {
+    ConfigurationManager cm;
+    
+    public MainPanel(ConfigurationManager c) {
+         cm = c;
+         String lookandfeel = null;
+        try { 
+             
+            //lookandfeel = UIManager.getSystemLookAndFeelClassName();
+            lookandfeel = UIManager.getCrossPlatformLookAndFeelClassName();
+            
+            UIManager.setLookAndFeel(lookandfeel);
+           // UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+           
+            
+            
+        } catch (Exception ex) {
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         //new MainPanel();
         initComponents();
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -49,8 +57,9 @@ public class MainPanel extends javax.swing.JFrame {
         int ysize = (int) tk.getScreenSize().getHeight();
         this.setSize(xsize, ysize);
         setIcon();
-        setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        Configure();
+        setExtendedState(java.awt.Frame.MAXIMIZED_BOTH); 
+        cm.init();
+        Configure(); 
     }
 
     /**
@@ -63,66 +72,15 @@ public class MainPanel extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jFrame_Configure = new javax.swing.JFrame();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField_NPATH = new javax.swing.JTextField();
-        jButton_editNmapPath = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField_NSEPATH = new javax.swing.JTextField();
-        jButton_editNSEPath = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField_LIBPATH = new javax.swing.JTextField();
-        jButton_editLibPath = new javax.swing.JButton();
-        jButton_autoconfig = new javax.swing.JButton();
-        jButton_applyConfig = new javax.swing.JButton();
-        jButton_cancelConfig = new javax.swing.JButton();
-        jButton_clearconfig = new javax.swing.JButton();
         jFileChooser1 = new javax.swing.JFileChooser();
-        jFrame_NewProject = new javax.swing.JFrame();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea_NewNSEDesc = new javax.swing.JTextArea();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField_NewNSEAuthor = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        jList_NewNSECateg = new javax.swing.JList();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jTextField_NewNSEName = new javax.swing.JTextField();
-        jButton_NewNSEBrowse = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        jComboBox_NewNSEService = new javax.swing.JComboBox();
-        jButton_NewCreate = new javax.swing.JButton();
-        jButton_NewCancel = new javax.swing.JButton();
-        jFrame_searchBox = new javax.swing.JFrame();
-        jPanel5 = new javax.swing.JPanel();
+        jDialog_SearchBox = new javax.swing.JDialog();
+        jPanel7 = new javax.swing.JPanel();
         jCheckBox_matchcase = new javax.swing.JCheckBox();
         jCheckBox_regex = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jTextField_searchItem = new javax.swing.JTextField();
-        jButton_close = new javax.swing.JButton();
         jButton_FindNext = new javax.swing.JButton();
-        jFrame_ScanOptions = new javax.swing.JFrame();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jRadioButton_scanTCP = new javax.swing.JRadioButton();
-        jRadioButton_scanUDP = new javax.swing.JRadioButton();
-        jPanel9 = new javax.swing.JPanel();
-        jCheckBox_scriptargs = new javax.swing.JCheckBox();
-        jTextField_scriptargs = new javax.swing.JTextField();
-        jCheckBox_scriptargsfile = new javax.swing.JCheckBox();
-        jTextField_scriptargsfile = new javax.swing.JTextField();
-        jButton_scriptargs_browse = new javax.swing.JButton();
-        jPanel10 = new javax.swing.JPanel();
-        jCheckBox_ptrace = new javax.swing.JCheckBox();
-        jCheckBox_verbose = new javax.swing.JCheckBox();
-        jCheckBox_debug = new javax.swing.JCheckBox();
-        jButton_CancelOptions = new javax.swing.JButton();
-        jButton_ApplyOptions = new javax.swing.JButton();
+        jButton_close = new javax.swing.JButton();
         buttonGroup_scanType = new javax.swing.ButtonGroup();
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem_closeWorkSpace = new javax.swing.JMenuItem();
@@ -131,6 +89,64 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel8 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel_About = new javax.swing.JLabel();
+        jDialog_Settings = new javax.swing.JDialog();
+        jTabbedPane_Settings = new javax.swing.JTabbedPane();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        jSeparator14 = new javax.swing.JSeparator();
+        jLabel24 = new javax.swing.JLabel();
+        jRadioButton_settingsScanTCP = new javax.swing.JRadioButton();
+        jRadioButton_settignsScanUDP = new javax.swing.JRadioButton();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jTextField_ScriptArgsSettings = new javax.swing.JTextField();
+        jTextField_ScriptArgsFileSettings = new javax.swing.JTextField();
+        jButton_ArgFileBrowse = new javax.swing.JButton();
+        jSeparator15 = new javax.swing.JSeparator();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        jCheckBox_settingsPacketTrace = new javax.swing.JCheckBox();
+        jCheckBox_settingsDebug = new javax.swing.JCheckBox();
+        jCheckBox_settingsVerbose = new javax.swing.JCheckBox();
+        jCheckBox_ArgSettings = new javax.swing.JCheckBox();
+        jCheckBox_ArgFileSettings = new javax.swing.JCheckBox();
+        jPanel12 = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jTextField_envEpath = new javax.swing.JTextField();
+        jLabel37 = new javax.swing.JLabel();
+        jTextField_envSpath = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
+        jTextField_envLpath = new javax.swing.JTextField();
+        jButton_BrowseNmapPath = new javax.swing.JButton();
+        jButton_BrowseNSEPath = new javax.swing.JButton();
+        jButton_BrowseLibPath = new javax.swing.JButton();
+        jButton_autoconfiguration = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jButton_CancelSettings = new javax.swing.JButton();
+        jButton_SaveSettings = new javax.swing.JButton();
+        jLabel_SettingsStatus = new javax.swing.JLabel();
+        jDialog_New = new javax.swing.JDialog();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        jTextField_sName = new javax.swing.JTextField();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTextArea_sDescription = new javax.swing.JTextArea();
+        jButton_sBrowse1 = new javax.swing.JButton();
+        jTextField_sAuthor = new javax.swing.JTextField();
+        jLabel41 = new javax.swing.JLabel();
+        jComboBox_sService = new javax.swing.JComboBox<>();
+        jLabel42 = new javax.swing.JLabel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jList_sCategory = new javax.swing.JList<>();
+        jLabel43 = new javax.swing.JLabel();
+        jPanel13 = new javax.swing.JPanel();
+        jButton_sCancel1 = new javax.swing.JButton();
+        jSeparator16 = new javax.swing.JSeparator();
+        jButton_sReset = new javax.swing.JButton();
+        jButton_sCreate1 = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         jButton_new = new javax.swing.JButton();
         jButton_open = new javax.swing.JButton();
@@ -145,7 +161,7 @@ public class MainPanel extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jButton_scan = new javax.swing.JButton();
         jButton_stop = new javax.swing.JButton();
-        jToggleButton_options = new javax.swing.JToggleButton();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
         jTextField_host = new javax.swing.JTextField();
         jTextField_port = new javax.swing.JTextField();
         jSeparator4 = new javax.swing.JToolBar.Separator();
@@ -153,6 +169,7 @@ public class MainPanel extends javax.swing.JFrame {
         jButton_about = new javax.swing.JButton();
         jToolBar2 = new javax.swing.JToolBar();
         jLabel_Status = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jProgressBar_status = new javax.swing.JProgressBar();
         jSplitPane_workspace = new javax.swing.JSplitPane();
@@ -225,423 +242,45 @@ public class MainPanel extends javax.swing.JFrame {
         jMenuItem_tftp = new javax.swing.JMenuItem();
         jMenuItem_xamp = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem_scanSettings = new javax.swing.JMenuItem();
-        jMenuItem_configure = new javax.swing.JMenuItem();
+        jMenuItem_Settings = new javax.swing.JMenuItem();
         jMenu_Help = new javax.swing.JMenu();
-        jMenuItem_about = new javax.swing.JMenuItem();
+        jMenuItem_HelpGettingStarting = new javax.swing.JMenuItem();
+        jMenuItem_HelpNSEDoc = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem_HelpAbout = new javax.swing.JMenuItem();
+        jMenuItem_HelpReportBugs = new javax.swing.JMenuItem();
 
-        jFrame_Configure.setTitle("Configure");
-        jFrame_Configure.setAlwaysOnTop(true);
-        jFrame_Configure.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
-        jFrame_Configure.setMinimumSize(new java.awt.Dimension(500, 230));
-        jFrame_Configure.setResizable(false);
-        jFrame_Configure.addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                jFrame_ConfigureWindowGainedFocus(evt);
-            }
-            public void windowLostFocus(java.awt.event.WindowEvent evt) {
-            }
-        });
-        jFrame_Configure.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                jFrame_ConfigureWindowOpened(evt);
-            }
-        });
+        jDialog_SearchBox.setTitle("Search");
+        jDialog_SearchBox.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/logo.png")));
 
-        java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
-        jPanel1Layout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanel1Layout.rowHeights = new int[] {0, 7, 0, 7, 0};
-        jPanel1.setLayout(jPanel1Layout);
-
-        jLabel2.setText("Nmap Path :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel1.add(jLabel2, gridBagConstraints);
-
-        jTextField_NPATH.setEditable(false);
-        jTextField_NPATH.setText(" ");
-        jTextField_NPATH.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                jTextField_NPATHInputMethodTextChanged(evt);
-            }
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-        });
-        jTextField_NPATH.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_NPATHActionPerformed(evt);
-            }
-        });
-        jTextField_NPATH.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jTextField_NPATHPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.6;
-        gridBagConstraints.weighty = 0.1;
-        jPanel1.add(jTextField_NPATH, gridBagConstraints);
-
-        jButton_editNmapPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/edit.gif"))); // NOI18N
-        jButton_editNmapPath.setToolTipText("Edit");
-        jButton_editNmapPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_editNmapPathActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        jPanel1.add(jButton_editNmapPath, gridBagConstraints);
-
-        jLabel3.setText("NSE Path :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel1.add(jLabel3, gridBagConstraints);
-
-        jTextField_NSEPATH.setEditable(false);
-        jTextField_NSEPATH.setText(" ");
-        jTextField_NSEPATH.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jTextField_NSEPATHPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel1.add(jTextField_NSEPATH, gridBagConstraints);
-
-        jButton_editNSEPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/edit.gif"))); // NOI18N
-        jButton_editNSEPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_editNSEPathActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        jPanel1.add(jButton_editNSEPath, gridBagConstraints);
-
-        jLabel5.setText("Lib Path :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel1.add(jLabel5, gridBagConstraints);
-
-        jTextField_LIBPATH.setEditable(false);
-        jTextField_LIBPATH.setText(" ");
-        jTextField_LIBPATH.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jTextField_LIBPATHPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel1.add(jTextField_LIBPATH, gridBagConstraints);
-
-        jButton_editLibPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/edit.gif"))); // NOI18N
-        jButton_editLibPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_editLibPathActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 4;
-        jPanel1.add(jButton_editLibPath, gridBagConstraints);
-
-        jButton_autoconfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/refresh.gif"))); // NOI18N
-        jButton_autoconfig.setText(" Auto Config");
-        jButton_autoconfig.setToolTipText("Click here to auto configure");
-        jButton_autoconfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_autoconfigActionPerformed(evt);
-            }
-        });
-
-        jButton_applyConfig.setText("Apply");
-        jButton_applyConfig.setEnabled(false);
-        jButton_applyConfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_applyConfigActionPerformed(evt);
-            }
-        });
-
-        jButton_cancelConfig.setText("Cancel");
-        jButton_cancelConfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_cancelConfigActionPerformed(evt);
-            }
-        });
-
-        jButton_clearconfig.setText("Clear");
-        jButton_clearconfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_clearconfigActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jFrame_ConfigureLayout = new javax.swing.GroupLayout(jFrame_Configure.getContentPane());
-        jFrame_Configure.getContentPane().setLayout(jFrame_ConfigureLayout);
-        jFrame_ConfigureLayout.setHorizontalGroup(
-            jFrame_ConfigureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_ConfigureLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jFrame_ConfigureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame_ConfigureLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jFrame_ConfigureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton_autoconfig, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame_ConfigureLayout.createSequentialGroup()
-                                .addComponent(jButton_applyConfig)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton_clearconfig)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton_cancelConfig)))))
-                .addContainerGap())
-        );
-        jFrame_ConfigureLayout.setVerticalGroup(
-            jFrame_ConfigureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_ConfigureLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(jButton_autoconfig)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jFrame_ConfigureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_cancelConfig)
-                    .addComponent(jButton_applyConfig)
-                    .addComponent(jButton_clearconfig))
-                .addGap(0, 50, Short.MAX_VALUE))
-        );
-
-        jFrame_NewProject.setTitle("Create New Project");
-        jFrame_NewProject.setAlwaysOnTop(true);
-        jFrame_NewProject.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
-        jFrame_NewProject.setResizable(false);
-        jFrame_NewProject.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                jFrame_NewProjectWindowOpened(evt);
-            }
-        });
-
-        java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
-        jPanel2Layout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanel2Layout.rowHeights = new int[] {0, 7, 0, 7, 0, 7, 0, 7, 0};
-        jPanel2.setLayout(jPanel2Layout);
-
-        jLabel4.setText("Script Name :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jLabel4, gridBagConstraints);
-
-        jLabel6.setText("Description :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jLabel6, gridBagConstraints);
-
-        jTextArea_NewNSEDesc.setColumns(20);
-        jTextArea_NewNSEDesc.setRows(5);
-        jScrollPane5.setViewportView(jTextArea_NewNSEDesc);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jScrollPane5, gridBagConstraints);
-
-        jLabel7.setText("Author :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jLabel7, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jTextField_NewNSEAuthor, gridBagConstraints);
-
-        jLabel8.setText("Category :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jLabel8, gridBagConstraints);
-
-        jList_NewNSECateg.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "auth", "broadcast", "brute", "default", "discovery", "dos", "exploit", "external", "fuzzer", "intrusive", "malware", "safe", "version", "vuln" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList_NewNSECateg.setSelectedIndex(3);
-        jList_NewNSECateg.setVisibleRowCount(4);
-        jScrollPane6.setViewportView(jList_NewNSECateg);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jScrollPane6, gridBagConstraints);
-
-        jPanel3.setLayout(new java.awt.GridBagLayout());
-
-        jTextField_NewNSEName.setEditable(false);
-        jTextField_NewNSEName.setEnabled(false);
-
-        jButton_NewNSEBrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/open.gif"))); // NOI18N
-        jButton_NewNSEBrowse.setToolTipText("Locate folder and choose file name with extention");
-        jButton_NewNSEBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_NewNSEBrowseActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton_NewNSEBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton_NewNSEBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jTextField_NewNSEName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
-        jPanel3.add(jPanel4, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jPanel3, gridBagConstraints);
-
-        jLabel9.setText("Port/Service :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jLabel9, gridBagConstraints);
-
-        jComboBox_NewNSEService.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default", "21/tcp FTP", "22/tcp SSH", "23/tcp Telnet", "25/tcp SMTP", "53/udp DNS", "69/udp TFTP", "79/udp Finger", "80/tcp HTTP", "123/udp NTP", "161/udp SNMP", "443/tcp HTTPS", "513/tcp login", "514/tcp shell", "1433/tcp MSSQL", "1521/tcp Oracle", "3306/tcp MySQL" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel2.add(jComboBox_NewNSEService, gridBagConstraints);
-
-        jButton_NewCreate.setText("Create");
-        jButton_NewCreate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_NewCreateActionPerformed(evt);
-            }
-        });
-
-        jButton_NewCancel.setText("Cancel");
-        jButton_NewCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_NewCancelActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jFrame_NewProjectLayout = new javax.swing.GroupLayout(jFrame_NewProject.getContentPane());
-        jFrame_NewProject.getContentPane().setLayout(jFrame_NewProjectLayout);
-        jFrame_NewProjectLayout.setHorizontalGroup(
-            jFrame_NewProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_NewProjectLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jFrame_NewProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame_NewProjectLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton_NewCreate)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton_NewCancel)))
-                .addContainerGap())
-        );
-        jFrame_NewProjectLayout.setVerticalGroup(
-            jFrame_NewProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_NewProjectLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jFrame_NewProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_NewCreate)
-                    .addComponent(jButton_NewCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jFrame_searchBox.setTitle("Find");
-        jFrame_searchBox.setAlwaysOnTop(true);
-        jFrame_searchBox.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
-        jFrame_searchBox.setResizable(false);
-
-        java.awt.GridBagLayout jPanel5Layout = new java.awt.GridBagLayout();
-        jPanel5Layout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanel5Layout.rowHeights = new int[] {0, 7, 0};
-        jPanel5.setLayout(jPanel5Layout);
+        jPanel7.setLayout(new java.awt.GridBagLayout());
 
         jCheckBox_matchcase.setText("Match Case");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel5.add(jCheckBox_matchcase, gridBagConstraints);
+        jPanel7.add(jCheckBox_matchcase, gridBagConstraints);
 
         jCheckBox_regex.setText("Regex");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel5.add(jCheckBox_regex, gridBagConstraints);
+        jPanel7.add(jCheckBox_regex, gridBagConstraints);
 
-        jLabel1.setText("Search For ");
+        jLabel2.setText("Search Text : ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel5.add(jLabel1, gridBagConstraints);
+        jPanel7.add(jLabel2, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 120;
-        jPanel5.add(jTextField_searchItem, gridBagConstraints);
-
-        jButton_close.setText("Close");
-        jButton_close.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_closeActionPerformed(evt);
-            }
-        });
+        jPanel7.add(jTextField_searchItem, gridBagConstraints);
 
         jButton_FindNext.setText("Find");
         jButton_FindNext.addActionListener(new java.awt.event.ActionListener() {
@@ -650,245 +289,37 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jFrame_searchBoxLayout = new javax.swing.GroupLayout(jFrame_searchBox.getContentPane());
-        jFrame_searchBox.getContentPane().setLayout(jFrame_searchBoxLayout);
-        jFrame_searchBoxLayout.setHorizontalGroup(
-            jFrame_searchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_searchBoxLayout.createSequentialGroup()
+        jButton_close.setText("Close");
+        jButton_close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_closeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jDialog_SearchBoxLayout = new javax.swing.GroupLayout(jDialog_SearchBox.getContentPane());
+        jDialog_SearchBox.getContentPane().setLayout(jDialog_SearchBoxLayout);
+        jDialog_SearchBoxLayout.setHorizontalGroup(
+            jDialog_SearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_SearchBoxLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jFrame_searchBoxLayout.createSequentialGroup()
-                .addGap(191, 191, 191)
-                .addComponent(jButton_FindNext)
-                .addGap(18, 18, 18)
-                .addComponent(jButton_close)
-                .addContainerGap(68, Short.MAX_VALUE))
-        );
-        jFrame_searchBoxLayout.setVerticalGroup(
-            jFrame_searchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_searchBoxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jFrame_searchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_FindNext)
-                    .addComponent(jButton_close))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jFrame_ScanOptions.setTitle("Scan Settings");
-        jFrame_ScanOptions.setAlwaysOnTop(true);
-        jFrame_ScanOptions.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Scan Type"));
-
-        buttonGroup_scanType.add(jRadioButton_scanTCP);
-        jRadioButton_scanTCP.setSelected(true);
-        jRadioButton_scanTCP.setText("TCP Scan");
-        jRadioButton_scanTCP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton_scanTCPActionPerformed(evt);
-            }
-        });
-
-        buttonGroup_scanType.add(jRadioButton_scanUDP);
-        jRadioButton_scanUDP.setText("UDP Scan");
-        jRadioButton_scanUDP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton_scanUDPActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(jRadioButton_scanTCP, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jRadioButton_scanUDP, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton_scanTCP)
-                    .addComponent(jRadioButton_scanUDP))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Script Arguments"));
-
-        jCheckBox_scriptargs.setText("Choose this option to select script arguments as command line option (--script-args)");
-        jCheckBox_scriptargs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox_scriptargsActionPerformed(evt);
-            }
-        });
-
-        jTextField_scriptargs.setEditable(false);
-
-        jCheckBox_scriptargsfile.setText("Choose this option to upload file as script arguments (--script-args-file)");
-        jCheckBox_scriptargsfile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox_scriptargsfileActionPerformed(evt);
-            }
-        });
-
-        jTextField_scriptargsfile.setEditable(false);
-        jTextField_scriptargsfile.setText(" ");
-
-        jButton_scriptargs_browse.setText("...");
-        jButton_scriptargs_browse.setEnabled(false);
-        jButton_scriptargs_browse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_scriptargs_browseActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel9Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jTextField_scriptargs))
-                            .addGroup(jPanel9Layout.createSequentialGroup()
-                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox_scriptargsfile)
-                                    .addComponent(jCheckBox_scriptargs))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jTextField_scriptargsfile)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton_scriptargs_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox_scriptargs)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField_scriptargs, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBox_scriptargsfile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField_scriptargsfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton_scriptargs_browse))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Debugging Options"));
-
-        jCheckBox_ptrace.setText("Packet Trace");
-
-        jCheckBox_verbose.setText("Verbose Mode");
-
-        jCheckBox_debug.setSelected(true);
-        jCheckBox_debug.setText("Debug");
-        jCheckBox_debug.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox_debugActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jCheckBox_ptrace, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBox_verbose, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBox_debug, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox_verbose)
-                    .addComponent(jCheckBox_ptrace)
-                    .addComponent(jCheckBox_debug))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jButton_CancelOptions.setText("Cancel");
-        jButton_CancelOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_CancelOptionsActionPerformed(evt);
-            }
-        });
-
-        jButton_ApplyOptions.setText("Apply");
-        jButton_ApplyOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_ApplyOptionsActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGroup(jDialog_SearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addGroup(jDialog_SearchBoxLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton_ApplyOptions)
+                        .addComponent(jButton_FindNext, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton_CancelOptions)))
+                        .addComponent(jButton_close, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+        jDialog_SearchBoxLayout.setVerticalGroup(
+            jDialog_SearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_SearchBoxLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_CancelOptions)
-                    .addComponent(jButton_ApplyOptions))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jFrame_ScanOptionsLayout = new javax.swing.GroupLayout(jFrame_ScanOptions.getContentPane());
-        jFrame_ScanOptions.getContentPane().setLayout(jFrame_ScanOptionsLayout);
-        jFrame_ScanOptionsLayout.setHorizontalGroup(
-            jFrame_ScanOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_ScanOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jFrame_ScanOptionsLayout.setVerticalGroup(
-            jFrame_ScanOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jFrame_ScanOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jDialog_SearchBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_FindNext)
+                    .addComponent(jButton_close))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -912,60 +343,585 @@ public class MainPanel extends javax.swing.JFrame {
 
         jDialog_About.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialog_About.setTitle("About");
-        jDialog_About.setAlwaysOnTop(true);
+        jDialog_About.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/logo.png")));
+        jDialog_About.setModal(true);
         jDialog_About.setResizable(false);
 
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/halcyon.png"))); // NOI18N
+        jPanel8.setBackground(new java.awt.Color(13, 113, 170));
+        jPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel8MouseClicked(evt);
+            }
+        });
 
-        jLabel_About.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jLabel_About.setText("<html> <body> <p> <h3>Halcyon IDE</h3> Version: 2.0.1 (codename: Aeolus) <br> Build id: 20180101-1200<br> </p> <p align=\"justify\"> (c) Copyright MIT License. https://halcyon-ide.org <br> This product includes software developed by other open source projects including modified BSD license.  </p> <br><br>  </p> </body></html>");
-        jLabel_About.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/logo-name.png"))); // NOI18N
+        jLabel12.setOpaque(true);
+
+        jLabel_About.setBackground(new java.awt.Color(16, 113, 170));
+        jLabel_About.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        jLabel_About.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel_About.setText("<html> <body> <p> <h3>Halcyon IDE</h3> Version: 2.0.2 <br>Codename: Boreas <br> Build id: 20200803-1200<br> </p> <p align=\"justify\"> (c) Copyright GPL 3.0 License. https://halcyon-ide.org <br>  </p> <br><br> </p> </body></html>");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel_About, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel_About, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel_About, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addComponent(jLabel_About, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
+            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jDialog_AboutLayout = new javax.swing.GroupLayout(jDialog_About.getContentPane());
         jDialog_About.getContentPane().setLayout(jDialog_AboutLayout);
         jDialog_AboutLayout.setHorizontalGroup(
             jDialog_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_AboutLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jDialog_AboutLayout.setVerticalGroup(
             jDialog_AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_AboutLayout.createSequentialGroup()
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jDialog_Settings.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog_Settings.setTitle("Settings");
+        jDialog_Settings.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/logo.png")));
+        jDialog_Settings.setModal(true);
+        jDialog_Settings.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                jDialog_SettingsWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                jDialog_SettingsWindowOpened(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(16, 113, 170));
+        jLabel23.setText("Nmap Scan Type");
+
+        jLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-settings.png"))); // NOI18N
+
+        buttonGroup_scanType.add(jRadioButton_settingsScanTCP);
+        jRadioButton_settingsScanTCP.setSelected(true);
+        jRadioButton_settingsScanTCP.setText("TCP Scanning");
+
+        buttonGroup_scanType.add(jRadioButton_settignsScanUDP);
+        jRadioButton_settignsScanUDP.setText("UDP Scanning");
+
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-settings.png"))); // NOI18N
+
+        jLabel26.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(16, 113, 170));
+        jLabel26.setText("Nmap Script Arguments");
+
+        jTextField_ScriptArgsSettings.setEditable(false);
+        jTextField_ScriptArgsSettings.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTextField_ScriptArgsFileSettings.setEditable(false);
+        jTextField_ScriptArgsFileSettings.setBackground(new java.awt.Color(255, 255, 255));
+
+        jButton_ArgFileBrowse.setText("Browse");
+        jButton_ArgFileBrowse.setEnabled(false);
+        jButton_ArgFileBrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ArgFileBrowseActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-settings.png"))); // NOI18N
+
+        jLabel33.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel33.setForeground(new java.awt.Color(16, 113, 170));
+        jLabel33.setText("Script Scan Settings");
+
+        jCheckBox_settingsPacketTrace.setText("Packet Trace");
+
+        jCheckBox_settingsDebug.setSelected(true);
+        jCheckBox_settingsDebug.setText("Debug Mode");
+
+        jCheckBox_settingsVerbose.setText("Verbose");
+
+        jCheckBox_ArgSettings.setText("Script Arguments (--script-args)");
+        jCheckBox_ArgSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_ArgSettingsActionPerformed(evt);
+            }
+        });
+
+        jCheckBox_ArgFileSettings.setText("Argument File (--script-args-file)");
+        jCheckBox_ArgFileSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox_ArgFileSettingsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jSeparator14, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel25)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jCheckBox_ArgSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jCheckBox_ArgFileSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextField_ScriptArgsFileSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(19, 19, 19)
+                                        .addComponent(jTextField_ScriptArgsSettings)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton_ArgFileBrowse))))
+                    .addComponent(jSeparator15, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jRadioButton_settingsScanTCP)
+                        .addGap(18, 18, 18)
+                        .addComponent(jRadioButton_settignsScanUDP)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel32)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox_settingsDebug)
+                                    .addComponent(jCheckBox_settingsPacketTrace)
+                                    .addComponent(jCheckBox_settingsVerbose))
+                                .addGap(0, 700, Short.MAX_VALUE)))))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton_settignsScanUDP)
+                    .addComponent(jRadioButton_settingsScanTCP))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ScriptArgsSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBox_ArgSettings))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ScriptArgsFileSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_ArgFileBrowse)
+                    .addComponent(jCheckBox_ArgFileSettings))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBox_settingsPacketTrace)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox_settingsDebug)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox_settingsVerbose)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jTabbedPane_Settings.addTab("Scanning Options", jPanel3);
+
+        jLabel34.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-settings.png"))); // NOI18N
+
+        jLabel35.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel35.setForeground(new java.awt.Color(16, 113, 170));
+        jLabel35.setText("Environment Settings");
+
+        jLabel36.setText("Nmap Executable Path");
+
+        jTextField_envEpath.setEditable(false);
+        jTextField_envEpath.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel37.setText("Nmap Script Path");
+
+        jTextField_envSpath.setEditable(false);
+        jTextField_envSpath.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel38.setText("Nmap Library Path");
+
+        jTextField_envLpath.setEditable(false);
+        jTextField_envLpath.setBackground(new java.awt.Color(255, 255, 255));
+
+        jButton_BrowseNmapPath.setText("Browse");
+        jButton_BrowseNmapPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_BrowseNmapPathActionPerformed(evt);
+            }
+        });
+
+        jButton_BrowseNSEPath.setText("Browse");
+        jButton_BrowseNSEPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_BrowseNSEPathActionPerformed(evt);
+            }
+        });
+
+        jButton_BrowseLibPath.setText("Browse");
+        jButton_BrowseLibPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_BrowseLibPathActionPerformed(evt);
+            }
+        });
+
+        jButton_autoconfiguration.setText("Auto Configure");
+        jButton_autoconfiguration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_autoconfigurationActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel34)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton_autoconfiguration)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel38, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel37, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField_envEpath, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                                    .addComponent(jTextField_envSpath)
+                                    .addComponent(jTextField_envLpath))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton_BrowseNSEPath)
+                                    .addComponent(jButton_BrowseNmapPath)
+                                    .addComponent(jButton_BrowseLibPath))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton_BrowseNmapPath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField_envEpath, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel37, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton_BrowseNSEPath)
+                        .addComponent(jTextField_envSpath, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextField_envLpath)
+                    .addComponent(jButton_BrowseLibPath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton_autoconfiguration)
+                .addGap(254, 254, 254))
+        );
+
+        jTabbedPane_Settings.addTab("Environment Settings", jPanel12);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButton_CancelSettings.setText("Close");
+        jButton_CancelSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_CancelSettingsActionPerformed(evt);
+            }
+        });
+
+        jButton_SaveSettings.setText("Save");
+        jButton_SaveSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_SaveSettingsActionPerformed(evt);
+            }
+        });
+
+        jLabel_SettingsStatus.setForeground(new java.awt.Color(51, 153, 0));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel_SettingsStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton_SaveSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_CancelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel_SettingsStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(5, 5, 5))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 1, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton_CancelSettings)
+                            .addComponent(jButton_SaveSettings))))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jDialog_SettingsLayout = new javax.swing.GroupLayout(jDialog_Settings.getContentPane());
+        jDialog_Settings.getContentPane().setLayout(jDialog_SettingsLayout);
+        jDialog_SettingsLayout.setHorizontalGroup(
+            jDialog_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_SettingsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDialog_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane_Settings)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jDialog_SettingsLayout.setVerticalGroup(
+            jDialog_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_SettingsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane_Settings, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jDialog_New.setTitle("New Script");
+        jDialog_New.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/logo.png")));
+
+        jLabel39.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jLabel39.setText("Script Name:");
+        jLabel39.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        jLabel40.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jLabel40.setText("Script Description:");
+        jLabel40.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        jTextField_sName.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+
+        jTextArea_sDescription.setColumns(20);
+        jTextArea_sDescription.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        jTextArea_sDescription.setRows(5);
+        jScrollPane9.setViewportView(jTextArea_sDescription);
+
+        jButton_sBrowse1.setText("Browse");
+        jButton_sBrowse1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_sBrowse1ActionPerformed(evt);
+            }
+        });
+
+        jTextField_sAuthor.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+
+        jLabel41.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jLabel41.setText("Author Name:");
+        jLabel41.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        jComboBox_sService.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        jComboBox_sService.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Default Port Rule", "21/tcp FTP", "22/tcp SSH", "23/tcp Telnet", "25/tcp SMTP", "53/udp DNS", "69/udp TFTP", "79/udp Finger", "80/tcp HTTP", "123/udp NTP", "161/udp SNMP", "443/tcp HTTPS", "513/tcp Login", "514/tcp Shell", "1433/tcp MSSQL", "1521/tcp Oracle", "3306/tcp MySQL" }));
+
+        jLabel42.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jLabel42.setText("Service/Port");
+
+        jList_sCategory.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        jList_sCategory.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "auth", "broadcast", "brute", "default", "discovery", "dos", "exploit", "external", "fuzzer", "intrusive", "malware", "safe", "version", "vuln" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList_sCategory.setSelectedIndex(3);
+        jScrollPane10.setViewportView(jList_sCategory);
+
+        jLabel43.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jLabel43.setText("Script Category:");
+        jLabel43.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel41, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel40, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                    .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField_sName, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField_sAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox_sService, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_sBrowse1))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton_sBrowse1)
+                        .addComponent(jTextField_sName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane9)
+                    .addComponent(jLabel40, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_sAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox_sService))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jButton_sCancel1.setText("Cancel");
+        jButton_sCancel1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_sCancel1ActionPerformed(evt);
+            }
+        });
+
+        jButton_sReset.setText("Reset");
+        jButton_sReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_sResetActionPerformed(evt);
+            }
+        });
+
+        jButton_sCreate1.setText("Create New");
+        jButton_sCreate1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_sCreate1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton_sCreate1)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_sReset)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_sCancel1)
+                .addContainerGap())
+            .addComponent(jSeparator16, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator16, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_sCancel1)
+                    .addComponent(jButton_sReset)
+                    .addComponent(jButton_sCreate1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jDialog_NewLayout = new javax.swing.GroupLayout(jDialog_New.getContentPane());
+        jDialog_New.getContentPane().setLayout(jDialog_NewLayout);
+        jDialog_NewLayout.setHorizontalGroup(
+            jDialog_NewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_NewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDialog_NewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jDialog_NewLayout.setVerticalGroup(
+            jDialog_NewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_NewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Halcyon IDE 2.0.1");
+        setTitle("Halcyon IDE 2.0.2");
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jButton_new.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/new.gif"))); // NOI18N
+        jButton_new.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-new.png"))); // NOI18N
         jButton_new.setToolTipText("New");
         jButton_new.setFocusable(false);
         jButton_new.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -976,8 +932,9 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton_new);
+        jButton_new.getAccessibleContext().setAccessibleDescription("Create New Script");
 
-        jButton_open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/open.gif"))); // NOI18N
+        jButton_open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-open.png"))); // NOI18N
         jButton_open.setToolTipText("Open");
         jButton_open.setFocusable(false);
         jButton_open.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -988,8 +945,9 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton_open);
+        jButton_open.getAccessibleContext().setAccessibleDescription("Open Script");
 
-        jButton_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/save.gif"))); // NOI18N
+        jButton_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-save.png"))); // NOI18N
         jButton_save.setToolTipText("Save");
         jButton_save.setFocusable(false);
         jButton_save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1001,7 +959,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_save);
 
-        jButton_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/print.gif"))); // NOI18N
+        jButton_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-print.png"))); // NOI18N
         jButton_print.setToolTipText("Print");
         jButton_print.setFocusable(false);
         jButton_print.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1014,7 +972,7 @@ public class MainPanel extends javax.swing.JFrame {
         jToolBar1.add(jButton_print);
         jToolBar1.add(jSeparator2);
 
-        jButton_cut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/cut.png"))); // NOI18N
+        jButton_cut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-cut.png"))); // NOI18N
         jButton_cut.setToolTipText("Cut");
         jButton_cut.setFocusable(false);
         jButton_cut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1026,7 +984,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_cut);
 
-        jButton_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/copy.gif"))); // NOI18N
+        jButton_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-copy.png"))); // NOI18N
         jButton_copy.setToolTipText("Copy");
         jButton_copy.setFocusable(false);
         jButton_copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1038,7 +996,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_copy);
 
-        jButton_paste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/paste.gif"))); // NOI18N
+        jButton_paste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-paste.png"))); // NOI18N
         jButton_paste.setMnemonic(KeyEvent.VK_V);
         jButton_paste.setToolTipText("Paste");
         jButton_paste.setFocusable(false);
@@ -1051,7 +1009,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_paste);
 
-        jButton_undo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/undo.gif"))); // NOI18N
+        jButton_undo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-undo.png"))); // NOI18N
         jButton_undo.setToolTipText("Undo");
         jButton_undo.setFocusable(false);
         jButton_undo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1063,7 +1021,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_undo);
 
-        jButton_find.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/search.gif"))); // NOI18N
+        jButton_find.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-search.png"))); // NOI18N
         jButton_find.setToolTipText("Find");
         jButton_find.setFocusable(false);
         jButton_find.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1076,7 +1034,7 @@ public class MainPanel extends javax.swing.JFrame {
         jToolBar1.add(jButton_find);
         jToolBar1.add(jSeparator3);
 
-        jButton_scan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/scan.gif"))); // NOI18N
+        jButton_scan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-play.png"))); // NOI18N
         jButton_scan.setToolTipText("Run Scan");
         jButton_scan.setFocusable(false);
         jButton_scan.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1093,7 +1051,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_scan);
 
-        jButton_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/stop.gif"))); // NOI18N
+        jButton_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-stop.png"))); // NOI18N
         jButton_stop.setToolTipText("Stop Scan");
         jButton_stop.setFocusable(false);
         jButton_stop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1104,27 +1062,7 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton_stop);
-
-        jToggleButton_options.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/options.gif"))); // NOI18N
-        jToggleButton_options.setFocusable(false);
-        jToggleButton_options.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton_options.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToggleButton_options.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton_optionsMouseClicked(evt);
-            }
-        });
-        jToggleButton_options.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton_optionsActionPerformed(evt);
-            }
-        });
-        jToggleButton_options.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jToggleButton_optionsPropertyChange(evt);
-            }
-        });
-        jToolBar1.add(jToggleButton_options);
+        jToolBar1.add(jSeparator11);
 
         jTextField_host.setText("scanme.nmap.org");
         jTextField_host.setMaximumSize(new java.awt.Dimension(200, 28));
@@ -1135,7 +1073,7 @@ public class MainPanel extends javax.swing.JFrame {
         jToolBar1.add(jTextField_port);
         jToolBar1.add(jSeparator4);
 
-        jButton_settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/settings.gif"))); // NOI18N
+        jButton_settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-cogs.png"))); // NOI18N
         jButton_settings.setToolTipText("Settings");
         jButton_settings.setFocusable(false);
         jButton_settings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1147,7 +1085,7 @@ public class MainPanel extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton_settings);
 
-        jButton_about.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/faq.gif"))); // NOI18N
+        jButton_about.setIcon(new javax.swing.ImageIcon(getClass().getResource("/halcyon/icons/icon-help.png"))); // NOI18N
         jButton_about.setToolTipText("About Halcyon");
         jButton_about.setFocusable(false);
         jButton_about.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1158,23 +1096,32 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton_about);
+        jButton_about.getAccessibleContext().setAccessibleDescription("About Halcyon IDE");
 
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
         jLabel_Status.setMaximumSize(new java.awt.Dimension(32767, 16));
         jToolBar2.add(jLabel_Status);
+
+        jLabel10.setText("Scanning:");
+        jToolBar2.add(jLabel10);
         jToolBar2.add(jSeparator5);
 
         jProgressBar_status.setMaximumSize(new java.awt.Dimension(100, 20));
         jProgressBar_status.setPreferredSize(new java.awt.Dimension(100, 20));
         jToolBar2.add(jProgressBar_status);
 
-        jSplitPane_workspace.setDividerLocation(450);
+        jSplitPane_workspace.setDividerLocation(650);
         jSplitPane_workspace.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane_workspace.setOneTouchExpandable(true);
+        jSplitPane_workspace.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jSplitPane_workspaceMouseClicked(evt);
+            }
+        });
 
-        jSplitPane_workpane.setDividerLocation(150);
+        jSplitPane_workpane.setDividerLocation(300);
         jSplitPane_workpane.setMinimumSize(new java.awt.Dimension(106, 173));
         jSplitPane_workpane.setOneTouchExpandable(true);
 
@@ -1626,33 +1573,50 @@ public class MainPanel extends javax.swing.JFrame {
         jMenu_Proj.add(jMenu_codegen);
         jMenu_Proj.add(jSeparator7);
 
-        jMenuItem_scanSettings.setText("Scan Settings");
-        jMenuItem_scanSettings.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem_Settings.setText("Settings");
+        jMenuItem_Settings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_scanSettingsActionPerformed(evt);
+                jMenuItem_SettingsActionPerformed(evt);
             }
         });
-        jMenu_Proj.add(jMenuItem_scanSettings);
-
-        jMenuItem_configure.setText("Configure");
-        jMenuItem_configure.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_configureActionPerformed(evt);
-            }
-        });
-        jMenu_Proj.add(jMenuItem_configure);
+        jMenu_Proj.add(jMenuItem_Settings);
 
         jMenuBar1.add(jMenu_Proj);
 
         jMenu_Help.setText("Help");
 
-        jMenuItem_about.setText("About");
-        jMenuItem_about.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem_HelpGettingStarting.setText("Getting Started");
+        jMenuItem_HelpGettingStarting.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_aboutActionPerformed(evt);
+                jMenuItem_HelpGettingStartingActionPerformed(evt);
             }
         });
-        jMenu_Help.add(jMenuItem_about);
+        jMenu_Help.add(jMenuItem_HelpGettingStarting);
+
+        jMenuItem_HelpNSEDoc.setText("Nmap Script Documentation");
+        jMenuItem_HelpNSEDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_HelpNSEDocActionPerformed(evt);
+            }
+        });
+        jMenu_Help.add(jMenuItem_HelpNSEDoc);
+        jMenu_Help.add(jSeparator9);
+
+        jMenuItem_HelpAbout.setText("About");
+        jMenuItem_HelpAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_HelpAboutActionPerformed(evt);
+            }
+        });
+        jMenu_Help.add(jMenuItem_HelpAbout);
+
+        jMenuItem_HelpReportBugs.setText("Report Bugs");
+        jMenuItem_HelpReportBugs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_HelpReportBugsActionPerformed(evt);
+            }
+        });
+        jMenu_Help.add(jMenuItem_HelpReportBugs);
 
         jMenuBar1.add(jMenu_Help);
 
@@ -1662,22 +1626,22 @@ public class MainPanel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSplitPane_workspace, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
-                    .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jSplitPane_workspace)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane_workspace, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jSplitPane_workspace, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getAccessibleContext().setAccessibleDescription("IDE for Nmap Script Developers");
@@ -1690,188 +1654,27 @@ public class MainPanel extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem_ExitActionPerformed
 
-    private void jButton_autoconfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_autoconfigActionPerformed
-        // TODO add your handling code here:
-        String npath ="", nse="", lib = "";
-        boolean flag = false;
-        try{ 
-            
-            //  detecting possible class paths depends on OS. 
-            String os = System.getProperty("os.name");
-            if(os.contains("Mac OS X")){
-                // identifying common linux paths
-                npath = "/usr/local/bin/nmap";
-                nse = "/usr/local/share/nmap/scripts/";
-                lib = "/usr/local/share/nmap/nselib/";
-                flag = true;
-            }else if(os.contains("Windows")){
-                String p=null;
-                // searching environment variables
-                String path = System.getenv("PATH");
-                String[] paths = path.split(";"); 
-                for (String path1 : paths) {
-                    if (path1.contains("Nmap") || path1.contains("nmap")) { 
-                        //found class paths from environment variables.  
-                        npath = path1+"\\nmap";
-                        nse = path1+"\\scripts\\";
-                        lib = path1+"\\nselib\\";
-                        flag = true;
-                    }
-                }
-                File f = new File(System.getenv("ProgramFiles")+"\\Nmap");
-                if((new File(System.getenv("ProgramFiles")+"\\Nmap")).exists()){
-                    p = System.getenv("ProgramFiles");
-                }else if((new File(System.getenv("ProgramFiles(X86)")+"\\Nmap")).exists()){
-                    p = System.getenv("ProgramFiles(X86)");
-                }
-                if(!p.isEmpty()){
-                    npath = p+"\\Nmap\\nmap.exe";
-                    nse = p+"\\Nmap\\scripts\\";
-                    lib = p+"\\Nmap\\nselib\\";
-                    flag = true;
-                }  
-            }else if(os.contains("Linux")){
-                npath = "/usr/bin/nmap";
-                nse = "/usr/share/nmap/scripts/";
-                lib = "/usr/share/nmap/nselib/";
-                flag = true;
-            } 
-            
-            if(flag){
-                File isNPATH = new File(npath);
-                File isNSE = new File(nse);
-                File isLIB = new File(lib);
-                if(isNPATH.exists() && isNSE.exists() && isLIB.exists()){
-                    jTextField_NPATH.setText(npath);
-                    jTextField_NSEPATH.setText(nse);
-                    jTextField_LIBPATH.setText(lib);
-                    jButton_applyConfig.setEnabled(true);
-                }else{
-                   JOptionPane.showConfirmDialog(jFrame_Configure,"Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
-                } 
-            }else{
-                JOptionPane.showConfirmDialog(jFrame_Configure,"Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
-            }
-         
-        }catch(NullPointerException e){
-            String error = "<html>Unable to find the nmap location.<br>Please configure it manually.</html>";
-            int done = JOptionPane.showConfirmDialog(jFrame_Configure,error, "Error !!",JOptionPane.OK_OPTION);
-        }
-    }//GEN-LAST:event_jButton_autoconfigActionPerformed
-
     private void jButton_settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_settingsActionPerformed
         // TODO add your handling code here:
-        jFrame_Configure.pack();
-        jFrame_Configure.setLocationRelativeTo(null);
-        jFrame_Configure.setVisible(true);
+        jDialog_Settings.pack();
+        jDialog_Settings.setLocationRelativeTo(null);
+        jTabbedPane_Settings.setSelectedIndex(0);
+        jDialog_Settings.setVisible(true);
     }//GEN-LAST:event_jButton_settingsActionPerformed
-
-    private void jButton_cancelConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cancelConfigActionPerformed
-        // TODO add your handling code here:
-        if(jTextField_NPATH.getText().isEmpty() || jTextField_NSEPATH.getText().isEmpty()||jTextField_LIBPATH.getText().isEmpty()){
-            int x = JOptionPane.showConfirmDialog(jFrame_Configure,"Halcyon wont work as desired without proper configuration. You might encouters errors", "Error!", JOptionPane.OK_OPTION);
-            if(x==JOptionPane.OK_OPTION){
-                jFrame_Configure.setVisible(false);
-            }
-        }else{
-            jFrame_Configure.setVisible(false);
-        }
-    }//GEN-LAST:event_jButton_cancelConfigActionPerformed
-
-    private void jButton_editNmapPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_editNmapPathActionPerformed
-        // TODO add your handling code here:
-        jFileChooser1.setCurrentDirectory(new java.io.File("/"));
-        jFileChooser1.setDialogTitle("Choose Nmap Executable");
-        jFileChooser1.setFileSelectionMode(jFileChooser1.FILES_ONLY);
-        jFileChooser1.setMultiSelectionEnabled(false);
-        int option = jFileChooser1.showOpenDialog(jFrame_Configure);
-        if(option == jFileChooser1.APPROVE_OPTION){
-            File f = jFileChooser1.getSelectedFile();
-            jTextField_NPATH.setText(f.getAbsolutePath()); 
-        }
-    }//GEN-LAST:event_jButton_editNmapPathActionPerformed
-
-    private void jButton_applyConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_applyConfigActionPerformed
-        // TODO add your handling code here:
-        setProperties(jTextField_NPATH.getText(),jTextField_NSEPATH.getText(),jTextField_LIBPATH.getText());
-        jFrame_Configure.setVisible(false);
-        int x = JOptionPane.showConfirmDialog(null,"You may need to restart the IDE to apply the changed settings", "Settings", JOptionPane.OK_OPTION);
-        if(x==JOptionPane.OK_OPTION){
-            System.exit(0);
-        }
-    }//GEN-LAST:event_jButton_applyConfigActionPerformed
-
-    private void jButton_clearconfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_clearconfigActionPerformed
-        // TODO add your handling code here:
-        jTextField_NPATH.setText("");
-        jTextField_NSEPATH.setText("");
-        jTextField_LIBPATH.setText("");
-        jButton_applyConfig.setEnabled(false);
-    }//GEN-LAST:event_jButton_clearconfigActionPerformed
-
-    private void jMenuItem_configureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_configureActionPerformed
-        // TODO add your handling code here:
-        jFrame_Configure.pack();
-        jFrame_Configure.setLocationRelativeTo(null);
-        jFrame_Configure.setVisible(true);
-    }//GEN-LAST:event_jMenuItem_configureActionPerformed
-
-    private void jFrame_ConfigureWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jFrame_ConfigureWindowOpened
-        // TODO add your handling code here:
-        File conf = new File(userhome+""+File.separator+"halcyon.settings");
-        if(conf.exists()){
-            loadSettings();
-        }
-        
-    }//GEN-LAST:event_jFrame_ConfigureWindowOpened
 
     private void jButton_newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_newActionPerformed
         // TODO add your handling code here:
-        jFrame_NewProject.pack();
-        jFrame_NewProject.setLocationRelativeTo(null);
-        jFrame_NewProject.setVisible(true);
+        jDialog_New.pack();
+        jDialog_New.setLocationRelativeTo(null);
+        jDialog_New.setVisible(true);
         resetNewProjUI();
     }//GEN-LAST:event_jButton_newActionPerformed
 
-    private void jFrame_NewProjectWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jFrame_NewProjectWindowOpened
-        // TODO add your handling code here: 
-       // resetNewProjUI();
-    }//GEN-LAST:event_jFrame_NewProjectWindowOpened
-
-    private void jButton_NewCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewCreateActionPerformed
-        // TODO add your handling code here:
-        ScriptBuilder sb = new ScriptBuilder();
-        sb.setTemplate(jTextField_NewNSEName.getText(), jTextArea_NewNSEDesc.getText(), jTextField_NewNSEAuthor.getText(), jComboBox_NewNSEService.getSelectedItem().toString(), jList_NewNSECateg.getSelectedValues());
-        
-        createNew(sb.createTemplate());
-        jFrame_NewProject.dispose(); 
-    }//GEN-LAST:event_jButton_NewCreateActionPerformed
-
-    private void jButton_NewNSEBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewNSEBrowseActionPerformed
-        // TODO add your handling code here:
-        try{
-            Properties prop = new Properties();
-            jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home", ".")));  
-            jFileChooser1.setDialogTitle("Save Script As");
-            jFileChooser1.setMultiSelectionEnabled(false);
-            int option = jFileChooser1.showSaveDialog(jFrame_NewProject);
-            if(option == jFileChooser1.APPROVE_OPTION){
-                File file = new File(jFileChooser1.getSelectedFile().getAbsolutePath());
-                if(!file.exists()) file.createNewFile();
-                hb.setFile(file);
-                jTextField_NewNSEName.setText(file.getAbsolutePath());
-            }
-        }catch(Exception e){
-            JOptionPane.showConfirmDialog(jFrame_NewProject,"Halcyon IDE do not have permission to create file. Try executing from different path", "Permission Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
-            
-        }
-    }//GEN-LAST:event_jButton_NewNSEBrowseActionPerformed
-
     private void jMenuItem_NewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_NewActionPerformed
         // TODO add your handling code here:
-        jFrame_NewProject.pack();
-        jFrame_NewProject.setLocationRelativeTo(null);
-        jFrame_NewProject.setVisible(true);
+        jDialog_New.pack();
+        jDialog_New.setLocationRelativeTo(null); 
+        jDialog_New.setVisible(true);
         resetNewProjUI();
     }//GEN-LAST:event_jMenuItem_NewActionPerformed
 
@@ -1978,83 +1781,17 @@ public class MainPanel extends javax.swing.JFrame {
         printScript();
     }//GEN-LAST:event_jMenuItem_printActionPerformed
 
-    private void jButton_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_closeActionPerformed
-        // TODO add your handling code here:
-        jFrame_searchBox.setVisible(false);
-    }//GEN-LAST:event_jButton_closeActionPerformed
-
-    private void jButton_FindNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_FindNextActionPerformed
-        // TODO add your handling code here:
-        findText(true);
-    }//GEN-LAST:event_jButton_FindNextActionPerformed
-
     private void jButton_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_findActionPerformed
         // TODO add your handling code here:
-        jFrame_searchBox.pack();
-        jFrame_searchBox.setLocationRelativeTo(null);
-        jFrame_searchBox.setVisible(true);
+        jDialog_SearchBox.pack();
+        jDialog_SearchBox.setLocationRelativeTo(null);
+        jDialog_SearchBox.setVisible(true);
     }//GEN-LAST:event_jButton_findActionPerformed
-
-    private void jCheckBox_scriptargsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_scriptargsActionPerformed
-        // TODO add your handling code here:
-        if(jCheckBox_scriptargs.isSelected()){
-            jCheckBox_scriptargsfile.setSelected(false);
-            jButton_scriptargs_browse.setEnabled(false);
-            jTextField_scriptargsfile.setText(""); 
-            jTextField_scriptargsfile.setEnabled(false); 
-            jTextField_scriptargsfile.setEditable(false);
-            jTextField_scriptargs.setEnabled(true); 
-            jTextField_scriptargs.setEditable(true);
-        }else{
-            jTextField_scriptargs.setEnabled(false); 
-            jTextField_scriptargs.setEditable(false);
-        }
-    }//GEN-LAST:event_jCheckBox_scriptargsActionPerformed
-
-    private void jToggleButton_optionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton_optionsActionPerformed
-        // TODO add your handling code here:
-        hb.setIsOptions(((JToggleButton) evt.getSource()).isSelected());
-        
-    }//GEN-LAST:event_jToggleButton_optionsActionPerformed
-
-    private void jToggleButton_optionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton_optionsMouseClicked
-        // TODO add your handling code here:
-        if(evt.getClickCount()==2){
-            jFrame_ScanOptions.pack();
-            jFrame_ScanOptions.setLocationRelativeTo(null);
-            jFrame_ScanOptions.setVisible(true);
-        }
-    }//GEN-LAST:event_jToggleButton_optionsMouseClicked
-
-    private void jButton_ApplyOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ApplyOptionsActionPerformed
-        // TODO add your handling code here:
-        setOptions(); 
-    }//GEN-LAST:event_jButton_ApplyOptionsActionPerformed
 
     private void jButton_scanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_scanActionPerformed
         // TODO add your handling code here:
         startScan(); 
     }//GEN-LAST:event_jButton_scanActionPerformed
-
-    private void jRadioButton_scanTCPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_scanTCPActionPerformed
-        // TODO add your handling code here:
-        hb.setScanType(evt.getActionCommand()); 
-    }//GEN-LAST:event_jRadioButton_scanTCPActionPerformed
-
-    private void jRadioButton_scanUDPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_scanUDPActionPerformed
-        // TODO add your handling code here:
-        hb.setScanType(evt.getActionCommand());
-    }//GEN-LAST:event_jRadioButton_scanUDPActionPerformed
-
-    private void jButton_CancelOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CancelOptionsActionPerformed
-        // TODO add your handling code here:
-        jFrame_ScanOptions.setVisible(false);
-    }//GEN-LAST:event_jButton_CancelOptionsActionPerformed
-
-    private void jButton_NewCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewCancelActionPerformed
-        // TODO add your handling code here:
-        jFrame_NewProject.setVisible(false);
-    }//GEN-LAST:event_jButton_NewCancelActionPerformed
 
     private void jButton_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_stopActionPerformed
         // TODO add your handling code here:
@@ -2064,10 +1801,6 @@ public class MainPanel extends javax.swing.JFrame {
     private void jButton_scanMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_scanMousePressed
         // TODO add your handling code here: 
     }//GEN-LAST:event_jButton_scanMousePressed
-
-    private void jToggleButton_optionsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jToggleButton_optionsPropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton_optionsPropertyChange
 
     private void jMenuItem_afpHelperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_afpHelperActionPerformed
         // TODO add your handling code here:
@@ -2255,82 +1988,21 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void jMenuItem_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_findActionPerformed
         // TODO add your handling code here:
-        jFrame_searchBox.pack();
-        jFrame_searchBox.setLocationRelativeTo(null);
-        jFrame_searchBox.setVisible(true);
+        jDialog_SearchBox.pack();
+        jDialog_SearchBox.setLocationRelativeTo(null);
+        jDialog_SearchBox.setVisible(true);
     }//GEN-LAST:event_jMenuItem_findActionPerformed
 
-    private void jMenuItem_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_aboutActionPerformed
+    private void jMenuItem_HelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_HelpAboutActionPerformed
         // TODO add your handling code here:
         showAbout(); 
         
-    }//GEN-LAST:event_jMenuItem_aboutActionPerformed
+    }//GEN-LAST:event_jMenuItem_HelpAboutActionPerformed
 
     private void jButton_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_aboutActionPerformed
         // TODO add your handling code here:
         showAbout();
     }//GEN-LAST:event_jButton_aboutActionPerformed
-
-    private void jButton_editNSEPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_editNSEPathActionPerformed
-        // TODO add your handling code here:
-        jFileChooser1.setCurrentDirectory(new java.io.File("/"));
-        jFileChooser1.setDialogTitle("Choose Nmap Executable");
-        jFileChooser1.setFileSelectionMode(jFileChooser1.DIRECTORIES_ONLY);
-        jFileChooser1.setMultiSelectionEnabled(false);
-        int option = jFileChooser1.showOpenDialog(jFrame_Configure);
-        if(option == jFileChooser1.APPROVE_OPTION){
-            File f = jFileChooser1.getSelectedFile();
-            jTextField_NSEPATH.setText(f.getAbsolutePath()); 
-        }
-    }//GEN-LAST:event_jButton_editNSEPathActionPerformed
-
-    private void jButton_editLibPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_editLibPathActionPerformed
-        // TODO add your handling code here:
-        jFileChooser1.setCurrentDirectory(new java.io.File("/"));
-        jFileChooser1.setDialogTitle("Choose Nmap Executable");
-        jFileChooser1.setFileSelectionMode(jFileChooser1.DIRECTORIES_ONLY);
-        jFileChooser1.setMultiSelectionEnabled(false);
-        int option = jFileChooser1.showOpenDialog(jFrame_Configure);
-        if(option == jFileChooser1.APPROVE_OPTION){
-            File f = jFileChooser1.getSelectedFile();
-            jTextField_LIBPATH.setText(f.getAbsolutePath()); 
-        }
-    }//GEN-LAST:event_jButton_editLibPathActionPerformed
-
-    private void jTextField_NPATHPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField_NPATHPropertyChange
-        // TODO add your handling code here:
-       
-      
-    }//GEN-LAST:event_jTextField_NPATHPropertyChange
-
-    private void jTextField_NSEPATHPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField_NSEPATHPropertyChange
-        // TODO add your handling code here:
-    
-    }//GEN-LAST:event_jTextField_NSEPATHPropertyChange
-
-    private void jTextField_LIBPATHPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField_LIBPATHPropertyChange
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jTextField_LIBPATHPropertyChange
-
-    private void jTextField_NPATHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_NPATHActionPerformed
-        // TODO add your handling code here:
-          
-    }//GEN-LAST:event_jTextField_NPATHActionPerformed
-
-    private void jTextField_NPATHInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextField_NPATHInputMethodTextChanged
-        // TODO add your handling code here:
-          
-    }//GEN-LAST:event_jTextField_NPATHInputMethodTextChanged
-
-    private void jFrame_ConfigureWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jFrame_ConfigureWindowGainedFocus
-        // TODO add your handling code here:
-       
-        if(!jTextField_NPATH.getText().isEmpty() || !jTextField_NSEPATH.getText().isEmpty() || !jTextField_LIBPATH.getText().isEmpty()){
-           jButton_applyConfig.setEnabled(true); 
-          
-        }
-    }//GEN-LAST:event_jFrame_ConfigureWindowGainedFocus
 
     private void jMenuItem_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_stopActionPerformed
         // TODO add your handling code here:
@@ -2342,16 +2014,12 @@ public class MainPanel extends javax.swing.JFrame {
         startScan();
     }//GEN-LAST:event_jMenuItem_runActionPerformed
 
-    private void jCheckBox_debugActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_debugActionPerformed
+    private void jMenuItem_SettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_SettingsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox_debugActionPerformed
-
-    private void jMenuItem_scanSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_scanSettingsActionPerformed
-        // TODO add your handling code here:
-        jFrame_ScanOptions.pack();
-        jFrame_ScanOptions.setLocationRelativeTo(null);
-        jFrame_ScanOptions.setVisible(true);
-    }//GEN-LAST:event_jMenuItem_scanSettingsActionPerformed
+        jDialog_Settings.pack();
+        jDialog_Settings.setLocationRelativeTo(null);
+        jDialog_Settings.setVisible(true); 
+    }//GEN-LAST:event_jMenuItem_SettingsActionPerformed
 
     private void jMenuItem_exportScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_exportScriptActionPerformed
         // TODO add your handling code here:
@@ -2364,41 +2032,278 @@ public class MainPanel extends javax.swing.JFrame {
         updateScriptDB();
     }//GEN-LAST:event_jMenuItem_updateScriptDBActionPerformed
 
-    private void jButton_scriptargs_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_scriptargs_browseActionPerformed
+    private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
+        // TODO add your handling code here:
+        jDialog_About.dispose();
+    }//GEN-LAST:event_jPanel8MouseClicked
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        jDialog_About.dispose();
+    }//GEN-LAST:event_formMouseClicked
+
+    private void jSplitPane_workspaceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSplitPane_workspaceMouseClicked
+        // TODO add your handling code here:
+        jDialog_About.dispose();
+    }//GEN-LAST:event_jSplitPane_workspaceMouseClicked
+
+    private void jButton_autoconfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_autoconfigurationActionPerformed
+        String npath ="", nse="", lib = "";
+        boolean flag = false;
+        try{  
+            //  detecting possible class paths depends on OS. 
+            String os = System.getProperty("os.name");
+            if(os.contains("Mac OS X")){
+                // identifying common linux paths
+                npath = "/usr/local/bin/nmap";
+                nse = "/usr/local/share/nmap/scripts/";
+                lib = "/usr/local/share/nmap/nselib/";
+                flag = true;
+            }else if(os.contains("Windows")){
+                String p=null;
+                // searching environment variables
+                String path = System.getenv("PATH");
+                String[] paths = path.split(";"); 
+                for (String path1 : paths) {
+                    if (path1.contains("Nmap") || path1.contains("nmap")) { 
+                        //found class paths from environment variables.  
+                        npath = path1+"\\nmap";
+                        nse = path1+"\\scripts\\";
+                        lib = path1+"\\nselib\\";
+                        flag = true;
+                    }
+                }
+                File f = new File(System.getenv("ProgramFiles")+"\\Nmap");
+                if((new File(System.getenv("ProgramFiles")+"\\Nmap")).exists()){
+                    p = System.getenv("ProgramFiles");
+                }else if((new File(System.getenv("ProgramFiles(X86)")+"\\Nmap")).exists()){
+                    p = System.getenv("ProgramFiles(X86)");
+                }
+                if(!p.isEmpty()){
+                    npath = p+"\\Nmap\\nmap.exe";
+                    nse = p+"\\Nmap\\scripts\\";
+                    lib = p+"\\Nmap\\nselib\\";
+                    flag = true;
+                }  
+            }else if(os.contains("Linux")){
+                npath = "/usr/bin/nmap";
+                nse = "/usr/share/nmap/scripts/";
+                lib = "/usr/share/nmap/nselib/";
+                flag = true;
+            } 
+            
+            if(flag){
+                File isNPATH = new File(npath);
+                File isNSE = new File(nse);
+                File isLIB = new File(lib);
+                if(isNPATH.exists() && isNSE.exists() && isLIB.exists()){
+                    jTextField_envEpath.setText(npath);
+                    jTextField_envSpath.setText(nse);
+                    jTextField_envLpath.setText(lib); 
+                }else{
+                   JOptionPane.showConfirmDialog(jDialog_Settings,"Autoconfiguration failed because one or more files are not found or invalid. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+                } 
+            }else{
+                JOptionPane.showConfirmDialog(jDialog_Settings,"Autoconfiguration failed. Please configure manually by clicking corresponding edit buttons.", "Warning", JOptionPane.PLAIN_MESSAGE);  
+            }
+         
+        }catch(NullPointerException e){
+            String error = "<html>Unable to find the nmap location.<br>Please configure it manually.</html>";
+            int done = JOptionPane.showConfirmDialog(jDialog_Settings,error, "Error !!",JOptionPane.OK_OPTION);
+        }
+    }//GEN-LAST:event_jButton_autoconfigurationActionPerformed
+
+    private void jDialog_SettingsWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog_SettingsWindowOpened
+        loadEnv();
+    }//GEN-LAST:event_jDialog_SettingsWindowOpened
+
+    private void jButton_CancelSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CancelSettingsActionPerformed
+        loadEnv();
+        jDialog_Settings.dispose();
+        //jDialog_Settings.setVisible(false);
+    }//GEN-LAST:event_jButton_CancelSettingsActionPerformed
+
+    private void jButton_BrowseNmapPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_BrowseNmapPathActionPerformed
+        jFileChooser1.setCurrentDirectory(new File(System.getProperty("user.home")));
+        jFileChooser1.setDialogTitle("Choose Nmap Executable");
+        jFileChooser1.setFileSelectionMode(jFileChooser1.FILES_ONLY);
+        jFileChooser1.setMultiSelectionEnabled(false);
+        int option = jFileChooser1.showOpenDialog(jDialog_Settings);
+        if(option == jFileChooser1.APPROVE_OPTION){
+            File f = jFileChooser1.getSelectedFile();
+            jTextField_envEpath.setText(f.getAbsolutePath()); 
+        }
+    }//GEN-LAST:event_jButton_BrowseNmapPathActionPerformed
+
+    private void jButton_BrowseNSEPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_BrowseNSEPathActionPerformed
+        jFileChooser1.setCurrentDirectory(new File(System.getProperty("user.home")));
+        jFileChooser1.setDialogTitle("Choose Nmap Script Path");
+        jFileChooser1.setFileSelectionMode(jFileChooser1.DIRECTORIES_ONLY);
+        jFileChooser1.setMultiSelectionEnabled(false);
+        int option = jFileChooser1.showOpenDialog(jDialog_Settings);
+        if(option == jFileChooser1.APPROVE_OPTION){
+            File f = jFileChooser1.getSelectedFile();
+            jTextField_envSpath.setText(f.getAbsolutePath()); 
+        }
+    }//GEN-LAST:event_jButton_BrowseNSEPathActionPerformed
+
+    private void jButton_BrowseLibPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_BrowseLibPathActionPerformed
+        jFileChooser1.setCurrentDirectory(new File(System.getProperty("user.home")));
+        jFileChooser1.setDialogTitle("Choose Nmap Library Path");
+        jFileChooser1.setFileSelectionMode(jFileChooser1.DIRECTORIES_ONLY);
+        jFileChooser1.setMultiSelectionEnabled(false);
+        int option = jFileChooser1.showOpenDialog(jDialog_Settings);
+        if(option == jFileChooser1.APPROVE_OPTION){
+            File f = jFileChooser1.getSelectedFile();
+            jTextField_envLpath.setText(f.getAbsolutePath()); 
+        }
+    }//GEN-LAST:event_jButton_BrowseLibPathActionPerformed
+
+    private void jCheckBox_ArgSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_ArgSettingsActionPerformed
+        if(jCheckBox_ArgSettings.isSelected()){
+            jCheckBox_ArgFileSettings.setSelected(false);
+            jTextField_ScriptArgsFileSettings.setText("");
+            jTextField_ScriptArgsFileSettings.setEditable(false);
+            jTextField_ScriptArgsFileSettings.setEnabled(false);
+            jButton_ArgFileBrowse.setEnabled(false);
+            jTextField_ScriptArgsSettings.setEditable(true);
+            jTextField_ScriptArgsSettings.setEnabled(true);
+            
+        }else{
+            jTextField_ScriptArgsSettings.setEditable(false);
+            jTextField_ScriptArgsSettings.setEnabled(false);
+            jTextField_ScriptArgsSettings.setText("");
+            
+        }
+    }//GEN-LAST:event_jCheckBox_ArgSettingsActionPerformed
+
+    private void jCheckBox_ArgFileSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_ArgFileSettingsActionPerformed
+        if(jCheckBox_ArgFileSettings.isSelected()){
+            jCheckBox_ArgSettings.setSelected(false);
+            jTextField_ScriptArgsSettings.setText("");
+            jButton_ArgFileBrowse.setEnabled(true);
+            jTextField_ScriptArgsFileSettings.setEditable(true);
+            jTextField_ScriptArgsFileSettings.setEnabled(true);
+            jTextField_ScriptArgsSettings.setEditable(false);
+            jTextField_ScriptArgsSettings.setEnabled(false);
+        }else{
+            jTextField_ScriptArgsFileSettings.setEditable(false);
+            jTextField_ScriptArgsFileSettings.setEnabled(false);
+            jButton_ArgFileBrowse.setEnabled(false);
+            jTextField_ScriptArgsFileSettings.setText("");
+        }
+    }//GEN-LAST:event_jCheckBox_ArgFileSettingsActionPerformed
+
+    private void jDialog_SettingsWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog_SettingsWindowClosed
+        loadEnv();
+    }//GEN-LAST:event_jDialog_SettingsWindowClosed
+
+    private void jButton_SaveSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SaveSettingsActionPerformed
+        saveSettings(); 
+    }//GEN-LAST:event_jButton_SaveSettingsActionPerformed
+
+    private void jButton_ArgFileBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ArgFileBrowseActionPerformed
         // TODO add your handling code here:
         try{
             Properties prop = new Properties();
             jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home", ".")));  
-            jFileChooser1.setDialogTitle("Select Script Argument File");
+            jFileChooser1.setDialogTitle("Select Script Argument File (--script-args-file) ");
             jFileChooser1.setMultiSelectionEnabled(false);
-            int option = jFileChooser1.showOpenDialog(jFrame_ScanOptions);
+            int option = jFileChooser1.showOpenDialog(jDialog_Settings);
             if(option == jFileChooser1.APPROVE_OPTION){
                 File file = new File(jFileChooser1.getSelectedFile().getAbsolutePath()); 
-                jTextField_scriptargsfile.setText(file.getAbsolutePath());
+                jTextField_ScriptArgsFileSettings.setText(file.getAbsolutePath());
             }
         }catch(Exception e){
-            JOptionPane.showConfirmDialog(jFrame_ScanOptions,"Script argument file could not load. Please try again.", "Settings Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
+            JOptionPane.showConfirmDialog(jDialog_Settings,"Script argument file could not load. Please try again.", "Settings Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
             
         }
-        
-    }//GEN-LAST:event_jButton_scriptargs_browseActionPerformed
+    }//GEN-LAST:event_jButton_ArgFileBrowseActionPerformed
 
-    private void jCheckBox_scriptargsfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox_scriptargsfileActionPerformed
+    private void jButton_sBrowse1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_sBrowse1ActionPerformed
         // TODO add your handling code here:
-        if(jCheckBox_scriptargsfile.isSelected()){
-            jCheckBox_scriptargs.setSelected(false); 
-            jTextField_scriptargs.setText("");
-            jTextField_scriptargs.setEnabled(false);
-            jTextField_scriptargs.setEditable(false);
-            jTextField_scriptargsfile.setEnabled(true);
-            jTextField_scriptargsfile.setEditable(true);
-            jButton_scriptargs_browse.setEnabled(true); 
-        }else{
-            jTextField_scriptargsfile.setEnabled(false);
-            jTextField_scriptargsfile.setEditable(false);
-            jButton_scriptargs_browse.setEnabled(false); 
-        } 
-    }//GEN-LAST:event_jCheckBox_scriptargsfileActionPerformed
+        try{
+            Properties prop = new Properties();
+            jFileChooser1.setCurrentDirectory(new java.io.File(prop.getProperty("user.home", ".")));
+            jFileChooser1.setDialogTitle("Save New Script As");
+            jFileChooser1.setMultiSelectionEnabled(false); 
+            jFileChooser1.setFileFilter(new FileNameExtensionFilter("Nmap Script Files (*.nse)", "nse"));
+            jFileChooser1.setFileSelectionMode(jFileChooser1.FILES_ONLY);
+            int option = jFileChooser1.showSaveDialog(jDialog_New);
+            if(option == jFileChooser1.APPROVE_OPTION){
+                File file = new File(jFileChooser1.getSelectedFile().getAbsolutePath());
+                if(!file.exists()) file.createNewFile();
+                hb.setFile(file);
+                jTextField_sName.setText(file.getAbsolutePath());
+            }
+            
+         }catch(Exception e){
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(jDialog_New, "User does not have permission to write to this directory.", "Access Denied", JOptionPane.ERROR_MESSAGE, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+             
+        }
+    }//GEN-LAST:event_jButton_sBrowse1ActionPerformed
+
+    private void jButton_sCancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_sCancel1ActionPerformed
+        // TODO add your handling code here:
+        resetNewProjUI();
+        jDialog_New.dispose();
+    }//GEN-LAST:event_jButton_sCancel1ActionPerformed
+
+    private void jButton_sResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_sResetActionPerformed
+        // TODO add your handling code here:
+        resetNewProjUI();
+    }//GEN-LAST:event_jButton_sResetActionPerformed
+
+    private void jButton_sCreate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_sCreate1ActionPerformed
+        // TODO add your handling code here:
+        ScriptBuilder sb = new ScriptBuilder();
+        sb.setTemplate(jTextField_sName.getText(), jTextArea_sDescription.getText(), jTextField_sAuthor.getText(), jComboBox_sService.getSelectedItem().toString(), jList_sCategory.getSelectedValues());
+
+        createNew(sb.createTemplate());
+        jDialog_New.dispose();
+    }//GEN-LAST:event_jButton_sCreate1ActionPerformed
+
+    private void jButton_FindNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_FindNextActionPerformed
+        // TODO add your handling code here:
+        findText(true);
+    }//GEN-LAST:event_jButton_FindNextActionPerformed
+
+    private void jButton_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_closeActionPerformed
+        // TODO add your handling code here:
+        jDialog_SearchBox.setVisible(false);
+        jDialog_SearchBox.dispose();
+    }//GEN-LAST:event_jButton_closeActionPerformed
+
+    private void jMenuItem_HelpNSEDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_HelpNSEDocActionPerformed
+        // TODO add your handling code here:
+        Desktop desktop = java.awt.Desktop.getDesktop();
+        try {
+            URI url = new URI("https://nmap.org/nsedoc/");
+            desktop.browse(url);
+        } catch (Exception e) { 
+        }
+    }//GEN-LAST:event_jMenuItem_HelpNSEDocActionPerformed
+
+    private void jMenuItem_HelpReportBugsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_HelpReportBugsActionPerformed
+        // TODO add your handling code here:
+        Desktop desktop = java.awt.Desktop.getDesktop();
+        try {
+            URI url = new URI("https://github.com/s4n7h0/Halcyon/issues/new");
+            desktop.browse(url);
+        } catch (Exception e) { 
+        }
+    }//GEN-LAST:event_jMenuItem_HelpReportBugsActionPerformed
+
+    private void jMenuItem_HelpGettingStartingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_HelpGettingStartingActionPerformed
+        // TODO add your handling code here:
+        Desktop desktop = java.awt.Desktop.getDesktop();
+        try {
+            URI url = new URI("https://halcyon-ide.org/overview");
+            desktop.browse(url);
+        } catch (Exception e) { 
+        }
+    }//GEN-LAST:event_jMenuItem_HelpGettingStartingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2430,68 +2335,75 @@ public class MainPanel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainPanel().setVisible(true);
+               // new MainPanel(ConfigurationManager cm).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup_scanType;
-    private javax.swing.JButton jButton_ApplyOptions;
-    private javax.swing.JButton jButton_CancelOptions;
+    private javax.swing.JButton jButton_ArgFileBrowse;
+    private javax.swing.JButton jButton_BrowseLibPath;
+    private javax.swing.JButton jButton_BrowseNSEPath;
+    private javax.swing.JButton jButton_BrowseNmapPath;
+    private javax.swing.JButton jButton_CancelSettings;
     private javax.swing.JButton jButton_FindNext;
-    private javax.swing.JButton jButton_NewCancel;
-    private javax.swing.JButton jButton_NewCreate;
-    private javax.swing.JButton jButton_NewNSEBrowse;
+    private javax.swing.JButton jButton_SaveSettings;
     private javax.swing.JButton jButton_about;
-    private javax.swing.JButton jButton_applyConfig;
-    private javax.swing.JButton jButton_autoconfig;
-    private javax.swing.JButton jButton_cancelConfig;
-    private javax.swing.JButton jButton_clearconfig;
+    private javax.swing.JButton jButton_autoconfiguration;
     private javax.swing.JButton jButton_close;
     private javax.swing.JButton jButton_copy;
     private javax.swing.JButton jButton_cut;
-    private javax.swing.JButton jButton_editLibPath;
-    private javax.swing.JButton jButton_editNSEPath;
-    private javax.swing.JButton jButton_editNmapPath;
     private javax.swing.JButton jButton_find;
     private javax.swing.JButton jButton_new;
     private javax.swing.JButton jButton_open;
     private javax.swing.JButton jButton_paste;
     private javax.swing.JButton jButton_print;
+    private javax.swing.JButton jButton_sBrowse1;
+    private javax.swing.JButton jButton_sCancel1;
+    private javax.swing.JButton jButton_sCreate1;
+    private javax.swing.JButton jButton_sReset;
     private javax.swing.JButton jButton_save;
     private javax.swing.JButton jButton_scan;
-    private javax.swing.JButton jButton_scriptargs_browse;
     private javax.swing.JButton jButton_settings;
     private javax.swing.JButton jButton_stop;
     private javax.swing.JButton jButton_undo;
-    private javax.swing.JCheckBox jCheckBox_debug;
+    private javax.swing.JCheckBox jCheckBox_ArgFileSettings;
+    private javax.swing.JCheckBox jCheckBox_ArgSettings;
     private javax.swing.JCheckBox jCheckBox_matchcase;
-    private javax.swing.JCheckBox jCheckBox_ptrace;
     private javax.swing.JCheckBox jCheckBox_regex;
-    private javax.swing.JCheckBox jCheckBox_scriptargs;
-    private javax.swing.JCheckBox jCheckBox_scriptargsfile;
-    private javax.swing.JCheckBox jCheckBox_verbose;
-    private javax.swing.JComboBox jComboBox_NewNSEService;
+    private javax.swing.JCheckBox jCheckBox_settingsDebug;
+    private javax.swing.JCheckBox jCheckBox_settingsPacketTrace;
+    private javax.swing.JCheckBox jCheckBox_settingsVerbose;
+    private javax.swing.JComboBox<String> jComboBox_sService;
     private javax.swing.JDialog jDialog_About;
+    private javax.swing.JDialog jDialog_New;
+    private javax.swing.JDialog jDialog_SearchBox;
+    private javax.swing.JDialog jDialog_Settings;
     private javax.swing.JFileChooser jFileChooser1;
-    private javax.swing.JFrame jFrame_Configure;
-    private javax.swing.JFrame jFrame_NewProject;
-    private javax.swing.JFrame jFrame_ScanOptions;
-    private javax.swing.JFrame jFrame_searchBox;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel_About;
+    private javax.swing.JLabel jLabel_SettingsStatus;
     private javax.swing.JLabel jLabel_Status;
-    private javax.swing.JList jList_NewNSECateg;
+    private javax.swing.JList<String> jList_sCategory;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -2506,19 +2418,22 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_EAP;
     private javax.swing.JMenuItem jMenuItem_Exit;
     private javax.swing.JMenuItem jMenuItem_HTTPspider;
+    private javax.swing.JMenuItem jMenuItem_HelpAbout;
+    private javax.swing.JMenuItem jMenuItem_HelpGettingStarting;
+    private javax.swing.JMenuItem jMenuItem_HelpNSEDoc;
+    private javax.swing.JMenuItem jMenuItem_HelpReportBugs;
     private javax.swing.JMenuItem jMenuItem_JDWP;
     private javax.swing.JMenuItem jMenuItem_New;
     private javax.swing.JMenuItem jMenuItem_Open;
     private javax.swing.JMenuItem jMenuItem_Save;
     private javax.swing.JMenuItem jMenuItem_SaveAs;
-    private javax.swing.JMenuItem jMenuItem_about;
+    private javax.swing.JMenuItem jMenuItem_Settings;
     private javax.swing.JMenuItem jMenuItem_afpHelper;
     private javax.swing.JMenuItem jMenuItem_bittorrent;
     private javax.swing.JMenuItem jMenuItem_bruteDriver;
     private javax.swing.JMenuItem jMenuItem_bruteEngine;
     private javax.swing.JMenuItem jMenuItem_closeAll;
     private javax.swing.JMenuItem jMenuItem_closeWorkSpace;
-    private javax.swing.JMenuItem jMenuItem_configure;
     private javax.swing.JMenuItem jMenuItem_copy;
     private javax.swing.JMenuItem jMenuItem_cut;
     private javax.swing.JMenuItem jMenuItem_dhcp6;
@@ -2539,7 +2454,6 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_print;
     private javax.swing.JMenuItem jMenuItem_rpc;
     private javax.swing.JMenuItem jMenuItem_run;
-    private javax.swing.JMenuItem jMenuItem_scanSettings;
     private javax.swing.JMenuItem jMenuItem_socketConnSend;
     private javax.swing.JMenuItem jMenuItem_stop;
     private javax.swing.JMenuItem jMenuItem_tftp;
@@ -2551,28 +2465,29 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu_Help;
     private javax.swing.JMenu jMenu_Proj;
     private javax.swing.JMenu jMenu_codegen;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanel_status;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBar_status;
-    private javax.swing.JRadioButton jRadioButton_scanTCP;
-    private javax.swing.JRadioButton jRadioButton_scanUDP;
+    private javax.swing.JRadioButton jRadioButton_settignsScanUDP;
+    private javax.swing.JRadioButton jRadioButton_settingsScanTCP;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator11;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -2580,23 +2495,24 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JSplitPane jSplitPane_workpane;
     private javax.swing.JSplitPane jSplitPane_workspace;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane_Settings;
     private javax.swing.JTabbedPane jTabbedPane_workspace;
-    private javax.swing.JTextArea jTextArea_NewNSEDesc;
     private javax.swing.JTextArea jTextArea_output;
-    private javax.swing.JTextField jTextField_LIBPATH;
-    private javax.swing.JTextField jTextField_NPATH;
-    private javax.swing.JTextField jTextField_NSEPATH;
-    private javax.swing.JTextField jTextField_NewNSEAuthor;
-    private javax.swing.JTextField jTextField_NewNSEName;
+    private javax.swing.JTextArea jTextArea_sDescription;
+    private javax.swing.JTextField jTextField_ScriptArgsFileSettings;
+    private javax.swing.JTextField jTextField_ScriptArgsSettings;
+    private javax.swing.JTextField jTextField_envEpath;
+    private javax.swing.JTextField jTextField_envLpath;
+    private javax.swing.JTextField jTextField_envSpath;
     private javax.swing.JTextField jTextField_host;
     private javax.swing.JTextField jTextField_port;
-    private javax.swing.JTextField jTextField_scriptargs;
-    private javax.swing.JTextField jTextField_scriptargsfile;
+    private javax.swing.JTextField jTextField_sAuthor;
+    private javax.swing.JTextField jTextField_sName;
     private javax.swing.JTextField jTextField_searchItem;
-    private javax.swing.JToggleButton jToggleButton_options;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JTree jTree_NSE;
@@ -2614,12 +2530,12 @@ public class MainPanel extends javax.swing.JFrame {
     private UpdateDB updateDB;
     String userhome = null;
     
-    URL url = getClass().getResource("/halcyon/icons/halcyon-logo.png"); 
+    URL url = getClass().getResource("/halcyon/icons/logo.png"); 
     ImageIcon icon = new ImageIcon(url);
     
     // user defined functions
     private void setIcon() {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/halcyon-logo.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/halcyon/icons/logo.png")));
         
     }
 
@@ -2627,22 +2543,22 @@ public class MainPanel extends javax.swing.JFrame {
         Properties properties = System.getProperties(); 
         userhome = properties.getProperty("user.home");
         
-        File conf = new File(userhome+""+File.separator+"halcyon.settings");
+        File conf = new File(cm.configfile);
         if (conf.exists()) { 
             //Setup the main panel
             Properties prop = new Properties();
             InputStream in = null;
             try {
-                in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
+                in = new FileInputStream(cm.configfile);
                 prop.load(in);
-                jTree_NSE.setModel(new FileSystemModel(new File(prop.getProperty("NSEPATH"))));
-                jTree_NSEDATA.setModel(new FileSystemModel(new File((prop.getProperty("LIBPATH")+"data"))));
-                jTree_NSELIB.setModel(new FileSystemModel(new File(prop.getProperty("LIBPATH"))));
+                jTree_NSE.setModel(new FileSystemModel(new File(prop.getProperty("script_path"))));
+                jTree_NSEDATA.setModel(new FileSystemModel(new File((prop.getProperty("lib_path")+"data"))));
+                jTree_NSELIB.setModel(new FileSystemModel(new File(prop.getProperty("lib_path"))));
             } catch (Exception e) {
-                
+                e.printStackTrace();
             }
         }else{
-            String msg = "<html>Classpath is not configured. Halcyon will not work as desired without this configuration. <br>Click Yes to configure now or No to quit.</html>";
+            String msg = "<html>Classpath is not configured. Halcyon IDE will not work as desired without this configuration. <br>Click Yes to configure now or No to quit.</html>";
             String title = "Configuration Missing";
             
              int configCheck = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION);
@@ -2664,37 +2580,57 @@ public class MainPanel extends javax.swing.JFrame {
     }*/
     
     private void configNow(){
-        jFrame_Configure.setIconImage(icon.getImage());
+        jDialog_Settings.setIconImage(icon.getImage());
         //jFrame_Configure.pack();
-        jFrame_Configure.setLocationRelativeTo(null);
-        jFrame_Configure.setVisible(true);
-    }
+        jDialog_Settings.setLocationRelativeTo(null);
+        jDialog_Settings.setVisible(true);
+    } 
     
-    private void setProperties(String npath, String nse, String lib){
-        Properties prop = new Properties();
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(userhome+""+File.separator+"halcyon.settings");
-            prop.setProperty("Halcyon Version", "2.0.1");
-            prop.setProperty("NPATH", npath);
-            prop.setProperty("NSEPATH", nse);
-            prop.setProperty("LIBPATH", lib);
-            prop.store(out, null);
-        } catch (Exception e) {
-            JOptionPane.showConfirmDialog (jFrame_Configure,"Error in configuration. Please try again", "Configuration Error!",JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, icon);
-        }
-    }
-    
-    private void loadSettings(){
-        Properties prop = new Properties();
-        InputStream in = null;
-        //File conf = new File(userhome+""+File.separator+"halcyon.settings");
-        try {
-            in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
-            prop.load(in);
-            jTextField_NPATH.setText(prop.getProperty("NPATH"));
-            jTextField_NSEPATH.setText(prop.getProperty("NSEPATH"));
-            jTextField_LIBPATH.setText(prop.getProperty("LIBPATH"));
+    private void loadEnv(){  
+        try { 
+            ConfigurationManager configmgr = new ConfigurationManager();
+            configmgr.init();       
+            if(configmgr.scan_type.equals("tcp")){
+                jRadioButton_settingsScanTCP.setSelected(true);
+                jRadioButton_settignsScanUDP.setSelected(false);
+            }else{  
+                jRadioButton_settingsScanTCP.setSelected(false);
+                jRadioButton_settignsScanUDP.setSelected(true);
+            }
+            if(configmgr.debug.equals("True")){
+                jCheckBox_settingsDebug.setSelected(true);
+            }else{
+                jCheckBox_settingsDebug.setSelected(false);
+            }
+            if(configmgr.pkt_trace.equals("True")){
+                jCheckBox_settingsPacketTrace.setSelected(true);
+            }else{
+                jCheckBox_settingsPacketTrace.setSelected(false);
+            }
+            if(configmgr.verbose.equals("True")){
+                jCheckBox_settingsVerbose.setSelected(true);
+            }else{
+                jCheckBox_settingsVerbose.setSelected(false);
+            }
+            if(configmgr.script_arg.isEmpty() || configmgr.script_arg == "" || configmgr.script_arg == null ){
+                jCheckBox_ArgSettings.setSelected(false);
+                jTextField_ScriptArgsSettings.setEditable(false); 
+            }else{
+                jCheckBox_ArgSettings.setSelected(true);
+                jTextField_ScriptArgsSettings.setEditable(true);
+                jTextField_ScriptArgsSettings.setText(configmgr.script_arg); 
+            }
+            if(configmgr.script_argfile.isEmpty() || configmgr.script_argfile == "" || configmgr.script_argfile == null ){
+                jCheckBox_ArgFileSettings.setSelected(false);
+                jTextField_ScriptArgsFileSettings.setText("");
+            }else{
+                jCheckBox_ArgFileSettings.setSelected(true);
+                jTextField_ScriptArgsFileSettings.setText(configmgr.script_argfile);
+            }
+            jTextField_envEpath.setText(configmgr.nmap_path);
+            jTextField_envSpath.setText(configmgr.script_path);
+            jTextField_envLpath.setText(configmgr.lib_path);  
+            jLabel_SettingsStatus.setText("");
         } catch (Exception e) {
             JOptionPane.showConfirmDialog(null,"Error in configuration. Please configure correctly and restart Halcyon.", "Configuration Error", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
         }
@@ -2719,8 +2655,9 @@ public class MainPanel extends javax.swing.JFrame {
             jTabbedPane_workspace.add(f.getAbsolutePath(),codePane);
             codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
-        }catch(Exception e){
-            JOptionPane.showConfirmDialog(jFrame_NewProject,"Can not create the file. Please try again", "Error", JOptionPane.OK_OPTION);
+        }catch(Exception e){ 
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(jDialog_New, "Unable to create new NSE script due to file I/O error.", "Error", JOptionPane.ERROR_MESSAGE, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
         }
             
     }
@@ -2809,8 +2746,8 @@ public class MainPanel extends javax.swing.JFrame {
             codearea.getDocument().addDocumentListener(new MyDocumentListener(jTabbedPane_workspace,jLabel_Status));
             jTabbedPane_workspace.setSelectedIndex(jTabbedPane_workspace.getTabCount()-1);
             
-        }catch(Exception e){
-            JOptionPane.showConfirmDialog(null,"Wrong File Selected", "Error!", JOptionPane.DEFAULT_OPTION);
+        }catch(Exception e){ 
+            
         }
         
        
@@ -2930,49 +2867,74 @@ public class MainPanel extends javax.swing.JFrame {
                 search.setSearchForward(next);
                 search.setWholeWord(false);
                  
-                found = SearchEngine.find(area, search);
+                found = SearchEngine.find(area, search).wasFound(); 
                 
                 if (!found) {
                         JOptionPane.showMessageDialog(this, "Text not found");
                 }
             }else{
-                JOptionPane.showConfirmDialog(jFrame_searchBox,"Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showConfirmDialog(jDialog_SearchBox,"Error", "No File Opened. Open a file or create new before search for something.", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
             } 
         } catch (Exception e) {
         }
     }
 
-    private void showOptions() {
-        jFrame_ScanOptions.pack();
-        jFrame_ScanOptions.setLocationRelativeTo(null);
-        jFrame_ScanOptions.setVisible(true);
+    private void showOptions() { 
+        jDialog_Settings.pack();
+        jDialog_Settings.setLocationRelativeTo(null);
+        jDialog_Settings.setVisible(true);
     }
 
-    private void setOptions() {
-        
-        
-        if(jCheckBox_scriptargs.isSelected() && jTextField_scriptargs.getText().isEmpty()){
-            JOptionPane.showConfirmDialog(jFrame_Configure,"Script Argument is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE); 
-        }else if(jCheckBox_scriptargsfile.isSelected() && jTextField_scriptargsfile.getText().isEmpty()){
-            JOptionPane.showConfirmDialog(jFrame_Configure,"Script Argument File is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-        }else{  
-            if(jCheckBox_scriptargs.isSelected()){
-                hb.setScriptArgs(jTextField_scriptargs.getText(), jCheckBox_scriptargs.isSelected());
-            }
-            if(jCheckBox_scriptargsfile.isSelected()){
-                hb.setScriptArgsFile(jTextField_scriptargsfile.getText(), jCheckBox_scriptargsfile.isSelected());
-            }
-            hb.setDebug(jCheckBox_debug.isSelected());
-            hb.setPtrace(jCheckBox_ptrace.isSelected());
-            hb.setVerbose(jCheckBox_verbose.isSelected());
-            if(jRadioButton_scanUDP.isSelected()){
-                hb.setScanType("UDP Scan");
-            }else{
+    
+    
+    private void saveSettings(){
+         
+        if(jCheckBox_ArgSettings.isSelected() && jTextField_ScriptArgsSettings.getText().isEmpty()){
+            JOptionPane.showConfirmDialog(jDialog_Settings, "Script Argument is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }else if(jCheckBox_ArgFileSettings.isSelected() && jTextField_ScriptArgsFileSettings.getText().isEmpty()){
+            JOptionPane.showConfirmDialog(jDialog_Settings, "Script Argument is empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }else if(jTextField_envEpath.getText().isEmpty() && jTextField_envLpath.getText().isEmpty() && jTextField_envSpath.getText().isEmpty()){
+            JOptionPane.showConfirmDialog(jDialog_Settings, "Environment Settings are empty", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }else{
+            String type, arg, argfile, pt, v, d = ""; 
+            String nmap, nscript, nlib = "";
+            if(jRadioButton_settingsScanTCP.isSelected()){
+                type = "tcp";
                 hb.setScanType("TCP Scan");
-            } 
-            jFrame_ScanOptions.setVisible(false);
+            }else{
+                type = "udp";
+                hb.setScanType("UDP Scan");
+            }
+            if(jCheckBox_ArgSettings.isSelected()){
+                arg = jTextField_ScriptArgsSettings.getText(); 
+                hb.setScriptArgs(jTextField_ScriptArgsSettings.getText(), jCheckBox_ArgSettings.isSelected());
+            }else{
+                arg = "";
+            }
+            if(jCheckBox_ArgFileSettings.isSelected()){
+                argfile = jTextField_ScriptArgsFileSettings.getText();
+                hb.setScriptArgsFile(jTextField_ScriptArgsFileSettings.getText(), jCheckBox_ArgFileSettings.isSelected());
+            }else{
+                argfile = "";
+            }
+            hb.setPtrace(jCheckBox_settingsPacketTrace.isSelected());
+            pt = jCheckBox_settingsPacketTrace.isSelected() ? "True" : "False"; 
+            hb.setDebug(jCheckBox_settingsDebug.isSelected());
+            d = jCheckBox_settingsDebug.isSelected() ? "True" : "False"; 
+            hb.setVerbose(jCheckBox_settingsVerbose.isSelected());
+            v = jCheckBox_settingsVerbose.isSelected() ? "True" : "False";
+            nmap = jTextField_envEpath.getText();
+            hb.setNmap(nmap);
+            nscript = jTextField_envSpath.getText();
+            hb.setNscript(nscript);
+            nlib = jTextField_envLpath.getText();
+            hb.setNlib(nlib);
+            ConfigurationManager cmgr = new ConfigurationManager();
+            cmgr.SaveConfiguration(type, arg, argfile, pt, d, v, nmap, nscript, nlib);
+            jLabel_SettingsStatus.setText("Changes are saved.");
+            
         } 
-        
+         
     }
 
     private void pushCode(String code) {
@@ -2990,7 +2952,7 @@ public class MainPanel extends javax.swing.JFrame {
         File scriptFile = null;
         String line = null;
         
-        codearea = new RSyntaxTextArea();
+        codearea = new RSyntaxTextArea(); 
         
         codearea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
         codearea.setCodeFoldingEnabled(true);
@@ -3023,29 +2985,20 @@ public class MainPanel extends javax.swing.JFrame {
 
     private void startScan() {
         if(jTabbedPane_workspace.getSelectedComponent()!=null){
-            if(hb.getIsOptions()){
-                jProgressBar_status.setIndeterminate(true);
-                task = new Task(); 
-                task.execute();
-            }else{
-                int sel = JOptionPane.showConfirmDialog(this, "<html>Scan Options are not selected. Running scans with scan options not selected will skip <br>extra settings such as debugging, script arguments, and other options. <br>Do you want to continue ?<html>","Scan Options are not set.",JOptionPane.YES_NO_OPTION);
-                if(sel == JOptionPane.YES_OPTION){
-                    jProgressBar_status.setIndeterminate(true);
-                    task = new Task(); 
-                    task.execute();
-                } 
-            }
+            jProgressBar_status.setIndeterminate(true);
+            task = new Task(); 
+            task.execute(); 
         }else{
             JOptionPane.showConfirmDialog(null,"No script found in the current workspace", "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
     private void resetNewProjUI() {
-        jTextField_NewNSEAuthor.setText(System.getProperty("user.name"));
-        jList_NewNSECateg.setSelectedIndex(3);
-        jTextField_NewNSEName.setText("");
-        jTextArea_NewNSEDesc.setText("");
-        jComboBox_NewNSEService.setSelectedIndex(0);
+        jTextField_sAuthor.setText(System.getProperty("user.name"));
+        jList_sCategory.setSelectedIndex(3);
+        jTextField_sName.setText("");
+        jTextArea_sDescription.setText("");
+        jComboBox_sService.setSelectedIndex(0);
     }
 
     private void exportScript() {
@@ -3055,9 +3008,9 @@ public class MainPanel extends javax.swing.JFrame {
             File f = new File(scriptName);
             String fname = f.getName();
             Properties prop = new Properties(); 
-            InputStream in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
+            InputStream in = new FileInputStream(cm.configfile);
             prop.load(in);
-            String expScriptName = prop.getProperty("NSEPATH")+""+fname;
+            String expScriptName = prop.getProperty("script_path")+""+fname;
             jTextArea_output.setText("Exportig "+scriptName+" to Nmap Script path "+expScriptName+"\r\n");
             
             File exportScript = new File(expScriptName);
@@ -3080,7 +3033,7 @@ public class MainPanel extends javax.swing.JFrame {
             updateScriptDB();
             
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, "Export Failed. Check the file permissions of nmap script path.", "Export Failed", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "You dont have permission to make changes in the nmap script path. \r\nRun with privileged account or export the script manually.", "Export Failed", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -3105,7 +3058,7 @@ public class MainPanel extends javax.swing.JFrame {
         oa = properties.getProperty("os.arch");
         sje = properties.getProperty("sun.jnu.encoding");
         ulc = properties.getProperty("user.language_user.country"); 
-        File conf = new File(userhome+""+File.separator+"halcyon.settings");
+        File conf = new File(cm.configfile);
         if (conf.exists()) {
             udir = conf.getParent();
         }else{
@@ -3115,15 +3068,14 @@ public class MainPanel extends javax.swing.JFrame {
                     "<body>" +
                     "<p>" +
                     "<h3>Halcyon IDE</h3>" +
-                    "Version: 2.0.1 (codename: Aeolus) <br>" +
-                    "Build id: 20180101-1200<br>" +
+                    "Version: 2.0.2 <br>"+
+                    "Release Codename: Boreas <br>" +
+                    "Build id: 20200803-1200<br>" +
                     "</p>" +
                     "<p align=\"justify\">" +
-                    "(c) Copyright MIT License. https://halcyon-ide.org <br>" +
-                    "This product includes software developed by other open source projects including modified BSD license. " +
+                    "(c) Copyright GPL 3.0 License. https://halcyon-ide.org <br>" + 
                     "</p> <br><br>" +
-                    "<p align=\"justify\">" +
-                    "Product Version: Halcyon IDE 2.0.1 (Build 20180101-1200) <br>" +
+                    "<p align=\"justify\">" + 
                     "Java: " + jrv+"; "+jvn+"; "+jvv+" <br>"+
                     "Runtime: " + jrn+"; "+jrv+" <br>" +
                     "System: "+on+" "+ov+" running on "+oa+"; "+sje+"; "+ulc+"<br>" +
@@ -3134,7 +3086,7 @@ public class MainPanel extends javax.swing.JFrame {
         jDialog_About.pack();
         jDialog_About.setLocationRelativeTo(null);
         jDialog_About.setVisible(true);
-    }
+    } 
  
 
     class Task extends SwingWorker<Void, Void> {
@@ -3162,9 +3114,9 @@ public class MainPanel extends javax.swing.JFrame {
                     jTextArea_output.setText("");
                     
                     //get the classpath and binaries
-                    in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
+                    in = new FileInputStream(cm.configfile);
                     prop.load(in);
-                    nmap = prop.getProperty("NPATH");
+                    nmap = prop.getProperty("nmap_path");
                     
                     // command building 
                     cmd.add(nmap); 
@@ -3239,9 +3191,9 @@ public class MainPanel extends javax.swing.JFrame {
         jTextArea_output.setText(jTextArea_output.getText()+"\r\n========== Updating Script DB =========\r\n");
  
         try { 
-            in = new FileInputStream(userhome+""+File.separator+"halcyon.settings");
+            in = new FileInputStream(cm.configfile);
             prop.load(in);
-            nmap = prop.getProperty("NPATH");
+            nmap = prop.getProperty("nmap_path");
                     
             cmd.add(nmap); 
             cmd.add("--script-updatedb");
