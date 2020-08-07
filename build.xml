@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Halcyon_IDE_v2.0.1" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Halcyon IDE v2.0.1</description>
+<project name="Halcyon_IDE" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Halcyon IDE</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
